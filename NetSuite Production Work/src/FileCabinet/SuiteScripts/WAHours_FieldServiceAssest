@@ -1,0 +1,11 @@
+/**
+ * when a WA hour created, update its asset record
+ */
+function afterSubmit(type) {
+  if (type == 'create' || type == 'edit') {
+    var assetId = nlapiGetFieldValue('custrecord_wasr_asset');
+    var serviceHours = nlapiGetFieldValue('custrecord_wasr_winchhours');
+    // Only link to SO - if transaction exist of any type.
+    if (assetId && serviceHours) nlapiSubmitField('customrecord_nx_asset', assetId, 'custrecord_dce_winch_hours', serviceHours);
+  }
+}

@@ -1,0 +1,12 @@
+/**
+ * This is supposed to connect an Asset to a Sales Order when the Asset is created.
+ */
+function afterSubmit(type) {
+	if (type == 'create') {
+  var id = nlapiGetRecordId(),
+	  so = nlapiGetFieldValue('custrecord_nx_asset_transaction');
+nlapiLogExecution('debug', 'values', 'Asset : ' + id + ' SO : ' + so);
+  // Only link to SO - if transaction exist of any type.
+  if (so) nlapiSubmitField('salesorder', so, 'custbody_nx_asset', id)
+}
+}

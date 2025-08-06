@@ -1,0 +1,533 @@
+<?xml version="1.0"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<!-- Modifications
+     23 March 2021     Bev Torrance    F5    Print bank details for foreign currencies (stores in subsidiary record)
+-->
+<head>
+	<link name="NotoSans" type="font" subtype="truetype" src="${nsfont.NotoSans_Regular}" src-bold="${nsfont.NotoSans_Bold}" src-italic="${nsfont.NotoSans_Italic}" src-bolditalic="${nsfont.NotoSans_BoldItalic}" bytes="2" />
+	<#if .locale == "zh_CN">
+		<link name="NotoSansCJKsc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKsc_Regular}" src-bold="${nsfont.NotoSansCJKsc_Bold}" bytes="2" />
+	<#elseif .locale == "zh_TW">
+		<link name="NotoSansCJKtc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKtc_Regular}" src-bold="${nsfont.NotoSansCJKtc_Bold}" bytes="2" />
+	<#elseif .locale == "ja_JP">
+		<link name="NotoSansCJKjp" type="font" subtype="opentype" src="${nsfont.NotoSansCJKjp_Regular}" src-bold="${nsfont.NotoSansCJKjp_Bold}" bytes="2" />
+	<#elseif .locale == "ko_KR">
+		<link name="NotoSansCJKkr" type="font" subtype="opentype" src="${nsfont.NotoSansCJKkr_Regular}" src-bold="${nsfont.NotoSansCJKkr_Bold}" bytes="2" />
+	<#elseif .locale == "th_TH">
+		<link name="NotoSansThai" type="font" subtype="opentype" src="${nsfont.NotoSansThai_Regular}" src-bold="${nsfont.NotoSansThai_Bold}" bytes="2" />
+	</#if>
+    <macrolist>
+        <macro id="nlheader">
+            <table class="header" style="width: 100%;">
+				<tr>
+					<td style="width: 50%; text-align: left;">
+						<#if subsidiary.logo?length != 0 >
+							<img src="${subsidiary.logo@url}" class="logo" />
+						<#elseif companyInformation.logoUrl?length != 0 >
+							<img src="${companyInformation.logoUrl}" class="logo" />
+						</#if>
+					</td>
+					<td style="width: 50%;" align="right">
+						<p class="title po-details" style="text-align: right;">Tax Invoice</p>
+						<!-- <p class="title po-details" style="text-align: right;">${record@title}</p> -->
+						<p class="number po-details" style="text-align: right;"><strong>Invoice Number</strong>: ${record.tranid}</p>
+						<p class="number po-details" style="text-align: right;"><strong>Date</strong>: ${record.trandate}</p>
+					</td>
+				</tr>
+			</table>
+
+			<table style="width: 100%;">
+				<tr>
+					<td>
+						<p class="nameandaddress" style="font-size: 11pt;"><b>${subsidiary.name}</b></p>
+						<#if subsidiary.addr1?length != 0 >
+							<p class="nameandaddress">
+								<#if subsidiary.addr1?has_content >${subsidiary.addr1},</#if>
+								<#if subsidiary.addr2?has_content >${subsidiary.addr2},</#if>
+								<#if subsidiary.city?has_content >${subsidiary.city},</#if>
+								<#if subsidiary.state?has_content >${subsidiary.state},</#if>
+								<#if subsidiary.zip?has_content >${subsidiary.zip},</#if>
+								<#if subsidiary.country?has_content >${subsidiary.country}</#if>
+							</p>
+						<#else>
+							<p class="nameandaddress">
+								<#if companyInformation.addr1?has_content >${companyInformation.addr1},</#if>
+								<#if companyInformation.addr2?has_content >${companyInformation.addr2},</#if>
+								<#if companyInformation.city?has_content >${companyInformation.city},</#if>
+								<#if companyInformation.state?has_content >${companyInformation.state},</#if>
+								<#if companyInformation.zip?has_content >${companyInformation.zip},</#if>
+								<#if companyInformation.country?has_content >${companyInformation.country}</#if>
+							</p>
+						</#if>
+						<p class="nameandaddress contact_info"><b>P:</b> ${subsidiary.custrecord_ss_anz_sub_phone} <b>E:</b>  ${subsidiary.custrecord_ss_anz_sub_email}  <b>W:</b> ${subsidiary.custrecord_ss_anz_sub_url}</p>
+						<p class="nameandaddress contact_info">
+							<#if subsidiary.country = "Australia"><b>ABN:</b></#if>
+							<#if subsidiary.country = "New Zealand"><b>GST:</b></#if>
+							${subsidiary.federalidnumber}
+						</p>
+					</td>
+				</tr>
+			</table>
+        </macro>
+        <macro id="nlfooter">
+            <table class="footer" style="width: 100%;">
+				<#assign footer_msg = subsidiary.custrecord_ss_anz_sub_ftrmsg_invoice >
+				<tr><td colspan="2">${footer_msg[0..*150]}&nbsp;<br/><br/></td></tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td align="right"><pagenumber/> of <totalpages/></td>
+				</tr>
+			</table>
+        </macro>
+    </macrolist>
+    <style type="text/css">* {
+		<#if .locale == "zh_CN">
+			font-family: NotoSans, NotoSansCJKsc, sans-serif;
+		<#elseif .locale == "zh_TW">
+			font-family: NotoSans, NotoSansCJKtc, sans-serif;
+		<#elseif .locale == "ja_JP">
+			font-family: NotoSans, NotoSansCJKjp, sans-serif;
+		<#elseif .locale == "ko_KR">
+			font-family: NotoSans, NotoSansCJKkr, sans-serif;
+		<#elseif .locale == "th_TH">
+			font-family: NotoSans, NotoSansThai, sans-serif;
+		<#else>
+			font-family: NotoSans, sans-serif;
+		</#if>
+			font-size: 9pt;
+		}
+		table {
+			table-layout: auto;
+			width: 100%;
+		}
+        th {
+            font-weight: bold;
+            vertical-align: middle;
+            padding: 5px 6px 3px;
+            background-color: #e3e3e3;
+            color: #333333;
+        }
+        td {
+            padding: 4px 6px;
+        }
+		td p { align:left }
+        b {
+            font-weight: bold;
+            color: #333333;
+        }
+        table.header td {
+            padding: 0px;
+        }
+        table.footer td {
+            padding: 0px;
+        }
+        table.bankdetails td {
+            padding: 0px;
+        }
+        table.itemtable th {
+            padding-bottom: 10px;
+            padding-top: 10px;
+        }
+        table.body td {
+            padding-top: 2px;
+        }
+        table.total {
+            page-break-inside: avoid;
+        }
+		.services tr td { border-collapse: collapse; border: 1px solid #999999; padding: 5px 10px; margin: 0; }
+		.services tr { padding: 0; margin: 0; }
+		.services tr th { padding: 5px 10px; color: white; background-color: #004781; }
+        tr.totalrow {
+            background-color: #e3e3e3;
+            line-height: 200%;
+        }
+        td.totalboxtop {
+            font-size: 12pt;
+            background-color: #e3e3e3;
+        }
+        td.addressheader {
+            padding-top: 6px;
+            padding-bottom: 2px;
+        }
+        td.address {
+            padding-top: 0px;
+        }
+        td.totalboxmid {
+            font-size: 28pt;
+            padding-top: 20px;
+            background-color: #e3e3e3;
+        }
+        td.totalboxbot {
+            background-color: #e3e3e3;
+            font-weight: bold;
+        }
+        p.title {
+            font-size: 22pt;
+        }
+        p.itemname {
+            font-weight: bold;
+            line-height: 150%;
+        }
+        hr {
+            width: 100%;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+            height: 1px;
+        }
+		.logo {
+			width: 100%;
+			height: auto;
+		}
+		p.nameandaddress {
+			padding-top: 3px; margin: 0 !important;
+		}
+		p.contact_info {
+			padding-top: 3px !important;
+		}
+</style>
+</head>
+
+		<!-- Get Header Height -->
+	<#assign hdr_height = subsidiary.custrecord_ss_anz_sub_hdr_hght >
+	<#if hdr_height == 0>
+		<#assign hdr_height = 29>
+	</#if>
+	<!-- Get Header Height -->
+	
+<body header="nlheader" header-height="${hdr_height}%" footer="nlfooter" footer-height="20pt" padding="0.3in 0.3in 0.3in 0.3in" size="A4">
+
+<#assign with_shipping = false>
+<table style="width: 100%;">
+	<tr>
+		<td width="50%">
+			<#if record.billaddress?length != 0 >
+				<b>${record.billaddress@label}</b><br/>
+				<#if record.entity.companyname?has_content>
+					 <!-- ${record.entity.companyname}<br/> -->
+				<#else>
+					<!-- ${record.entity.firstname} ${record.entity.lastname}<br/> -->
+					<!-- ${record.entity}<br/> -->
+				</#if>
+				${record.billaddress}
+			<#elseif record.entity?length != 0 >
+				<b>Bill To</b><br/>
+				<#if record.entity.companyname?has_content>
+					<!-- ${record.entity.companyname}<br/> -->
+				<#else>
+					${record.entity.firstname} ${record.entity.lastname}<br/>
+					<!-- ${record.entity}<br/> -->
+				</#if>
+				<#if record.entity.address?length != 0 >
+					${record.entity.address}
+				</#if>
+			</#if>
+		</td>
+		<td width="50%">
+			<#if record.shipaddress?length != 0 >
+				<b>${record.shipaddress@label}</b><br/>
+              	<!-- ${record.entity.companyname}<br/> -->
+				${record.shipaddress}
+			</#if>				
+		</td>
+	</tr>
+</table>
+
+<table class="body" style="width: 100%; padding-top: 10px;">
+	<tr>
+	<#if record.terms?has_content><th colspan="1">${record.terms@label}</th></#if>
+	<#if record.duedate?has_content><th colspan="1">${record.duedate@label} </th></#if>
+	<#if record.subsidiary.country == "New Zealand">
+		<#if record.currencysymbol != "NZD">
+			<#if record.currency?length != 0> <th colspan="1">${record.currency@label} </th> </#if>
+			<#if record.exchangerate?has_content> <th colspan="1">${record.exchangerate@label} </th> </#if> 
+		</#if>
+	</#if>
+	<#if record.otherrefnum?length != 0><th colspan="1">PO No.</th></#if>
+	<#if record.salesrep?length != 0><th colspan="1">${record.salesrep@label}</th></#if>
+    <#if record.wip_project?length != 0><th colspan="1">${record.wip_project@label}</th></#if>
+	<#if record.shipmethod?length != 0><th colspan="1">${record.shipmethod@label}</th></#if>
+	<#if record.shipdate?length != 0> <th colspan="1">${record.shipdate@label}</th> </#if>
+    <#if record.salesrep?length != 0><th colspan="1">${record.memo@label}</th></#if>
+	<#if record.linkedtrackingnumbers?has_content> <th colspan="1">Tracking No.</th> </#if> 
+	</tr>
+	<tr>
+	<#if record.terms?has_content><td colspan="1">${record.terms}</td></#if>
+	<#if record.duedate?has_content><td colspan="1">${record.duedate}</td></#if>
+	<#if record.subsidiary.country == "New Zealand">
+		<#if record.currencysymbol != "NZD">
+			<#if record.currency?length != 0> <td colspan="1">${record.currency}</td> </#if>
+			<#if record.exchangerate?has_content> <td colspan="1">${record.exchangerate}</td> </#if> 
+		</#if>
+	</#if>
+	<#if record.otherrefnum?length != 0><td colspan="1">${record.otherrefnum}</td></#if>
+	<#if record.salesrep?length != 0><td colspan="1">${record.salesrep}</td></#if>
+    <#if record.wip_project?length != 0><td colspan="1">${record.wip_project}</td></#if>
+	<#if record.shipmethod?length != 0><td colspan="1">${record.shipmethod}</td></#if>
+	<#if record.shipdate?length != 0> <td colspan="1">${record.shipdate}</td> </#if>
+    <#if record.salesrep?length != 0><td colspan="1">${record.memo}</td></#if>
+	<#if record.linkedtrackingnumbers?has_content> <td colspan="1">${record.linkedtrackingnumbers}</td> </#if>
+	</tr>
+</table>
+<table class="body" style="width: 100%; padding-top: 10px;">
+	<tr>
+	<#if record.cseg_wip_project?has_content><th colspan="1">Work On Hand #</th></#if>
+	<#if record.custbody_f5_production_slot?has_content><th colspan="1">Production Slot #</th></#if>
+	</tr>
+	<tr>
+	<#if record.terms?has_content><td colspan="1">${record.cseg_wip_project}</td></#if>
+	<#if record.duedate?has_content><td colspan="1">${record.custbody_f5_production_slot}</td></#if>
+	</tr>
+</table>
+<#if record.item?has_content>
+<#assign with_units = false>
+<#assign with_quantity = false>
+<#assign with_rate = false>
+   <#assign with_rrp = false>
+<#list record.item as item>
+	<#if (item.units?has_content) ><#assign with_units = true></#if>
+	<#if (item.quantity?has_content) ><#assign with_quantity = true></#if>
+	<#if (item.rate?length != 0) ><#assign with_rate = true></#if>
+    <#if (item.custcol_f5_currency_base_price?has_content)><#assign with_rrp = true></#if>
+</#list>
+
+<table class="itemtable" style="width: 100%; padding-top: 10px;"><!-- start items -->
+<thead>
+	<tr>
+	<th colspan="2">Item</th>
+    <!-- aqui item.custcolcustcol_dce_manuf_country_inv-->
+      <th colspan="2">Country of Origin</th> 
+	<#if with_quantity><th align="center" colspan="2">Quantity</th></#if>
+	<#if with_units><th align="right" colspan="1">Units</th></#if>
+	<!--<#if with_rrp>
+    <th align="right" colspan="2" style="height: 1px;">RRP (${record.currency})</th>
+      <#else>
+        <th align="right" colspan="2" style="height: 1px;">RRP (${record.currency})</th>
+      </#if>-->
+    <!--<#if record.subsidiary.country == "New Zealand">
+		<#if record.currencysymbol != "NZD">
+      	<th>RRP(${record.currency})</th>
+        <#else>
+        <th>RRP(${record.currencysymbol})</th>
+        </#if>
+	</#if>-->
+          
+	
+	<!--<th align="right" colspan="2">Disc</th>-->
+      <th align="right" colspan="2">Amount</th>
+	
+      <th align="right" colspan="2">Tax Amt</th>
+	<th align="right" colspan="2">Gross Amt</th>
+	</tr>
+</thead>
+
+	<#list record.item as item>
+    <#assign final_nzd_base = "0">
+    <#assign final_other_currency_base = "0">
+    <#assign nzd_base = item.custcol_dce_baseprice_item_nzd?string>
+    <#assign other_currency_base = item.custcol_f5_currency_base_price?string>
+    <#assign matches_nzd_base = item.custcol_dce_baseprice_item_nzd?replace(",","")?matches("[0-9]\\d*(\\.\\d+)?")>
+    <#assign matches_other_currency_base = item.custcol_f5_currency_base_price?replace(",","")?matches("[0-9]\\d*(\\.\\d+)?")>
+      
+    <#assign final_nzd_base>      
+      <#list matches_nzd_base as result>        
+        ${result?replace("(\\r\\n)","")?replace(" ","")}
+        </#list>     
+      </#assign>
+      
+	<#assign final_other_currency_base>
+      <#list matches_other_currency_base as result>        
+        ${result?replace("(\\r\\n)","")?replace(" ","")}                
+        </#list>    
+    </#assign>      
+      
+    <#assign final_nzd_base = final_nzd_base?keep_before(".")?trim>
+    <#assign final_other_currency_base = final_other_currency_base?keep_before(".")?trim>
+      
+      <#if record.currencysymbol != "NZD">      
+      <#assign exchange_rate = record.exchangerate>
+      <#else>
+      <#assign exchange_rate = 1>
+      </#if>
+        
+	<tr>
+	<td colspan="2"><span class="itemname">${item.custcol_f5_sale_itemcode}</span><br />${item.description}</td>
+        <!-- aqui item.custcolcustcol_dce_manuf_country_inv-->
+    	<td align="left" colspan="2">${item.custcolcustcol_dce_manuf_country_inv}</td>
+	<#if with_quantity><td align="center" colspan="2" line-height="150%">${item.quantity}</td></#if>
+	<#if with_units><td align="right" colspan="1">${item.units}</td></#if>
+	<!--<td align="right" colspan="2">
+            
+      <#if record.currency == "NZD">
+          ${item.custcol_dce_baseprice_item_nzd?string.currency} 
+      <#else>-->
+       
+        
+        
+        <!-- no value in RRP(NZD) field -->
+         <!--<#if final_nzd_base?length == 0>
+           
+           <#if item.custcol_f5_currency_base_price?has_content>
+             <#assign factor = item.custcol_f5_currency_base_price?number>
+           <#else>
+             <#assign factor = 0>
+           </#if>
+           
+            <#if exchange_rate lt 1>
+                <#assign final_nzd_base = factor * exchange_rate>
+                <#assign display_rrp = final_nzd_base>
+                  ${display_rrp?string.currency}
+            <#else>
+              	<#if factor gt 0>
+                <#assign final_nzd_base = item.custcol_f5_currency_base_price?number / exchange_rate>
+                <#else>
+                  <#assign final_nzd_base = 0>
+                </#if>
+                <#assign display_rrp = final_nzd_base>
+                  ${display_rrp?string.currency}
+            </#if>
+          <#else>
+            <#if final_other_currency_base != '' && final_other_currency_base != ' ' && final_other_currency_base?length gt 0>          
+            <#if final_nzd_base?number != final_other_currency_base?number >
+              <#assign display_rrp = other_currency_base>              
+              ${display_rrp?number?string.currency}
+            <#else>
+              <#if exchange_rate lt 1>
+                  <#assign display_rrp = item.custcol_dce_baseprice_item_nzd * exchange_rate>
+                  ${display_rrp?string.currency}
+              <#else>
+                  <#assign display_rrp = item.custcol_dce_baseprice_item_nzd / exchange_rate>
+                  ${display_rrp?string.currency}
+              </#if>
+           </#if>
+         <#else>
+           <#if exchange_rate lt 1>
+                <#assign display_rrp = item.custcol_dce_baseprice_item_nzd * exchange_rate>
+                ${display_rrp?string.currency}
+            <#else>
+                <#assign display_rrp = item.custcol_dce_baseprice_item_nzd / exchange_rate>
+                ${display_rrp?string.currency}
+            </#if>
+      	</#if>
+        </#if>
+          
+        
+                  
+                  
+      </#if>
+      
+    </td>
+     
+	
+      <td align="right" colspan="2"><#if item.price?has_content>${item.price}<#else>${item.custcol_f5_time_price_level}</#if></td>-->
+	<td align="right" colspan="2">${item.amount}</td>
+	
+      <td align="right" colspan="2">${item.tax1amt}</td>
+	<td align="right" colspan="2">${item.grossamt}</td>
+	</tr>
+	</#list><!-- end items --></table>
+
+<hr />
+</#if>
+<table style="width: 100%; padding-top: 10px;">
+	<tr>
+<!-- addded logic into the SUB for the banking details for Foreign currency -->
+        <td>
+			<table class="bankdetails" colspan="1">
+				<tr><td>${subsidiary.custrecord_ss_anz_sub_bank_details@label}:</td></tr>
+                        <#if record.currency="EUR">
+                           <tr><td>${subsidiary.custrecord_f5_subs_eurbank}</td></tr>
+                        <#elseif record.currency="USD"> 
+                           <tr><td>${subsidiary.custrecord_f5_subs_usdbank}</td></tr>
+                        <#elseif record.currency="CAD"> 
+                           <tr><td>${subsidiary.custrecord_f5_subs_cadbank}</td></tr>
+                        <#elseif record.currency="AUD"> 
+                            <tr><td>${subsidiary.custrecord_f5_subs_audbank}</td></tr>
+                        <#else><tr><td>${subsidiary.custrecord_ss_anz_sub_bank_details}</td></tr>
+                        </#if>
+                        <!--  <tr><td>For any inquiries please contact ${subsidiary.email}</td></tr> -->
+			</table>
+		</td>
+      
+      
+		<td>
+			<table class="total">
+			<tr>
+				<td colspan="1">&nbsp;</td>
+				<td align="right"><b>${record.subtotal@label} ${record.currency}</b></td>
+				<td align="right">${record.subtotal}</td>
+			</tr>
+			<#if (record.discounttotal != 0)><tr>
+				<td colspan="1">&nbsp;</td>
+				<td align="right"><b>${record.discounttotal@label}</b></td>
+				<td align="right">${record.discounttotal}</td>
+			</tr></#if>
+			<tr>
+				<td colspan="1">&nbsp;</td>
+				<td align="right"><b>GST Total</b></td>
+				<td align="right">${record.taxtotal}</td>
+			</tr>
+			<#if record.shippingcost?has_content>
+				<#if (record.shippingcost gt 0)><tr>
+				<td colspan="1">&nbsp;</td>
+				<td align="right"><b>${record.shippingcost@label}</b></td>
+				<td align="right">${record.shippingcost}</td>
+				</tr></#if>
+			</#if>
+			<tr class="totalrow">
+				<td background-color="#ffffff" colspan="1">&nbsp;</td>
+				<td align="right"><b>${record.total@label} ${record.currency} </b></td>
+				<td align="right">${record.total}</td>
+			</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+&nbsp;
+              
+<p>I hereby certify this commercial invoice to be true and correct.</p>
+<p>NOTES: Insurance and Freight are included</p>
+              <p>  Insurance Component ${record.custbody_dce_international_insurance}              </p>
+              <p>  Freight Component   ${record.custbody_dce_international_freight}            </p>
+              <p>  All pricing in ${record.currency}              </p>
+              <p>  All goods supplied CIF              </p>
+                            <p>  Shipper:             </p>
+                            <p>  Title:              </p>
+                            <p>  Date:             </p>    
+
+	<!-- Payment Advice Addon
+	<br />
+	<table class="print-friendly" page-break-inside="avoid" style="width: 100%; padding-top: 10px;">
+	<tbody>
+	<tr> 
+	<td colspan="5" align="center" >—————————————————————————————————————————————————————————</td>
+	</tr>
+	<tr>
+	<td colspan="2" align="left" ><span class="title">Payment Advice</span></td>
+	<td colspan="2" align="right">Customer</td>
+	<td colspan="1" align="left">${record.billaddress}</td>
+	</tr>
+	<tr>
+	<td colspan="2" rowspan="4" align="left" >To:<br />
+	<br />${subsidiary.name}<br /><span class="nameandaddress">${subsidiary.addr1}<#if subsidiary.addr2?length != 0 >, ${subsidiary.addr2}</#if>, ${subsidiary.city}, ${subsidiary.state}, ${subsidiary.zip}</span></td>
+	<td colspan="2" align="right">Invoice Number</td>
+	<td colspan="1" align="left" >${record.tranid}</td>
+	</tr>
+	<tr>
+	<td colspan="2" align="right">Amount Due</td>
+	<td colspan="1" align="left">${record.total}</td>
+	</tr>
+	<tr>
+	<td colspan="2" align="right">Due Date</td>
+	<td colspan="1" align="left">${record.duedate}</td>
+	</tr>
+	<tr>
+	<td colspan="2" align="right">Amount Enclosed</td>
+	<td colspan="1" align="left"><p><span style="text-decoration: underline;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+	<br /></span><sup>Enter amount paying above</sup></p>
+	</td>
+	</tr>
+	</tbody>
+	</table>
+	-->
+</body>
+</pdf>

@@ -1,0 +1,318 @@
+<?xml version="1.0"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+	<link name="NotoSans" type="font" subtype="truetype" src="${nsfont.NotoSans_Regular}" src-bold="${nsfont.NotoSans_Bold}" src-italic="${nsfont.NotoSans_Italic}" src-bolditalic="${nsfont.NotoSans_BoldItalic}" bytes="2" />
+	<#if .locale == "zh_CN">
+		<link name="NotoSansCJKsc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKsc_Regular}" src-bold="${nsfont.NotoSansCJKsc_Bold}" bytes="2" />
+	<#elseif .locale == "zh_TW">
+		<link name="NotoSansCJKtc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKtc_Regular}" src-bold="${nsfont.NotoSansCJKtc_Bold}" bytes="2" />
+	<#elseif .locale == "ja_JP">
+		<link name="NotoSansCJKjp" type="font" subtype="opentype" src="${nsfont.NotoSansCJKjp_Regular}" src-bold="${nsfont.NotoSansCJKjp_Bold}" bytes="2" />
+	<#elseif .locale == "ko_KR">
+		<link name="NotoSansCJKkr" type="font" subtype="opentype" src="${nsfont.NotoSansCJKkr_Regular}" src-bold="${nsfont.NotoSansCJKkr_Bold}" bytes="2" />
+	<#elseif .locale == "th_TH">
+		<link name="NotoSansThai" type="font" subtype="opentype" src="${nsfont.NotoSansThai_Regular}" src-bold="${nsfont.NotoSansThai_Bold}" bytes="2" />
+	</#if>
+    <macrolist>
+        <macro id="nlheader">
+             <table class="header" style="width: 100%;">
+				<tr>
+					<td style="width: 50%; text-align: left;">
+						<#if record.subsidiary.logo?length != 0 >
+							<img src="${subsidiary.logo@url}" class="logo" />
+						<#elseif companyInformation.logoUrl?length != 0 >
+							<img src="${companyInformation.logoUrl}" class="logo" />
+						</#if>
+					</td>
+					<td style="width: 50%;" align="right">
+						<p class="title po-details" style="text-align: right;">Item Fulfillment</p>
+						<!-- <p class="title po-details" style="text-align: right;">${record@title}</p> -->
+						<p class="number po-details" style="text-align: right;"><strong>Item Fulfillment #</strong>: ${record.tranid}</p>
+						<p class="number po-details" style="text-align: right;"><strong>Date</strong>: ${record.trandate}</p>
+                      <p class="number po-details" style="text-align: right;"><strong>Customer PO #</strong>: ${record.createdfrom.otherrefnum}</p>
+						<p class="number po-details" style="text-align: right;"><strong>Sales Order #</strong>: ${record.createdfrom?keep_after('#')}</p>
+					</td>
+				</tr>
+			</table>
+        <table style="width: 100%;">
+				<tr style="padding-top: -50px;">
+					<td>
+						<p class="nameandaddress" style="font-size: 11pt;"><b>${record.subsidiary.name?keep_after(':')}</b></p>
+						<#if record.subsidiary.addr1?length != 0 >
+							<p class="nameandaddress">
+								<#if record.subsidiary.addressee?has_content>${subsidiary.addressee}</#if>
+								<#if record.subsidiary.addr1?has_content>${subsidiary.addr1},</#if>
+								<#if record.subsidiary.addr2?has_content>${subsidiary.addr2},</#if>
+								<#if record.subsidiary.city?has_content>${subsidiary.city},</#if>
+								<#if record.subsidiary.state?has_content>${subsidiary.state},</#if>
+								<#if record.subsidiary.zip?has_content>${subsidiary.zip},</#if>
+								<#if record.subsidiary.country?has_content>${subsidiary.country}</#if>
+							</p>
+						<#else>
+							<p class="nameandaddress">
+								<#if companyInformation.addressee?has_content>${companyInformation.addressee},</#if>
+								<#if companyInformation.addr1?has_content>${companyInformation.addr1},</#if>
+								<#if companyInformation.addr2?has_content>${companyInformation.addr2},</#if>
+								<#if companyInformation.city?has_content>${companyInformation.city},</#if>
+								<#if companyInformation.state?has_content>${companyInformation.state},</#if>
+								<#if companyInformation.zip?has_content>${companyInformation.zip},</#if>
+								<#if companyInformation.country?has_content>${companyInformation.country}</#if>
+							</p>
+						</#if>
+						<#if record.subsidiary.custrecord_ss_anz_sub_phone?has_content>
+							<p class="nameandaddress contact_info"><b>P:</b> ${subsidiary.custrecord_ss_anz_sub_phone} </p>
+						<#else>
+							<p class="nameandaddress contact_info"><b>P:</b> ${companyInformation.custrecord_ss_anz_sub_phone} </p>
+						</#if>
+						<#if record.subsidiary.custrecord_ss_anz_sub_email?has_content>
+							<p class="nameandaddress contact_info"><b>E:</b> ${subsidiary.custrecord_ss_anz_sub_email}</p>
+						<#else>
+							<p class="nameandaddress contact_info"><b>E:</b> ${companyInformation.custrecord_ss_anz_sub_email}</p>
+						</#if>
+						<#if record.subsidiary.custrecord_ss_anz_sub_url?has_content>
+							<p class="nameandaddress contact_info"><b>W:</b> ${subsidiary.custrecord_ss_anz_sub_url}</p>
+						<#else>
+							<p class="nameandaddress contact_info"><b>W:</b> ${companyInformation.custrecord_ss_anz_sub_url}</p>
+						</#if>
+						<p class="nameandaddress contact_info">
+							<#if record.subsidiary.country = "Australia"><b>ABN:</b></#if>
+							<#if record.subsidiary.country = "New Zealand"><b>GST:</b></#if>
+							<#if record.subsidiary??>
+  <#assign subsidiary = record.subsidiary>
+</#if>
+						</p>
+					</td>
+				</tr>
+			</table>
+        </macro>
+        <macro id="nlfooter">
+            <table class="footer"><tr><#if preferences.PRINT_BARCODES>
+	<td><barcode codetype="code128" showtext="true" value="${record.tranid}"/></td>
+	</#if>
+	<td align="right"><pagenumber/> of <totalpages/></td>
+	</tr></table>
+        </macro>
+    </macrolist>
+     <style type="text/css">* {
+		<#if .locale == "zh_CN">
+			font-family: NotoSans, NotoSansCJKsc, sans-serif;
+		<#elseif .locale == "zh_TW">
+			font-family: NotoSans, NotoSansCJKtc, sans-serif;
+		<#elseif .locale == "ja_JP">
+			font-family: NotoSans, NotoSansCJKjp, sans-serif;
+		<#elseif .locale == "ko_KR">
+			font-family: NotoSans, NotoSansCJKkr, sans-serif;
+		<#elseif .locale == "th_TH">
+			font-family: NotoSans, NotoSansThai, sans-serif;
+		<#else>
+			font-family: NotoSans, sans-serif;
+		</#if>
+			font-size: 9pt;
+		}
+		table {
+			table-layout: auto;
+			width: 100%;
+		}
+        th {
+            font-weight: bold;
+            vertical-align: middle;
+            padding: 5px 6px 3px;
+            background-color: #e3e3e3;
+            color: #333333;
+        }
+        td {
+            padding: 4px 6px;
+        }
+		td p { align:left }
+        b {
+            font-weight: bold;
+            color: #333333;
+        }
+        table.header td {
+            padding: 0px;
+        }
+        table.footer td {
+            padding: 0px;
+        }
+        table.bankdetails td {
+            padding: 0px;
+        }
+        table.itemtable th {
+            padding-bottom: 10px;
+            padding-top: 10px;
+        }
+        table.body td {
+            padding-top: 2px;
+        }
+        table.total {
+            page-break-inside: avoid;
+        }
+		.services tr td { border-collapse: collapse; border: 1px solid #999999; padding: 5px 10px; margin: 0; }
+		.services tr { padding: 0; margin: 0; }
+		.services tr th { padding: 5px 10px; color: white; background-color: #004781; }
+        tr.totalrow {
+            background-color: #e3e3e3;
+            line-height: 200%;
+        }
+        td.totalboxtop {
+            font-size: 12pt;
+            background-color: #e3e3e3;
+        }
+        td.addressheader {
+            padding-top: 6px;
+            padding-bottom: 2px;
+        }
+        td.address {
+            padding-top: 0px;
+        }
+        td.totalboxmid {
+            font-size: 28pt;
+            padding-top: 20px;
+            background-color: #e3e3e3;
+        }
+        td.totalboxbot {
+            background-color: #e3e3e3;
+            font-weight: bold;
+        }
+        p.title {
+            font-size: 22pt;
+        }
+        p.itemname {
+            font-weight: bold;
+            line-height: 150%;
+        }
+        hr {
+            width: 100%;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+            height: 1px;
+        }
+		.logo {
+			width: 100%;
+			height: auto;
+		}
+		p.nameandaddress {
+			padding-top: 3px; margin: 0 !important;
+		}
+		p.contact_info {
+			padding-top: 3px !important;
+		}
+</style>
+</head>
+	<!-- Get Header Height -->
+	<#assign hdr_height = record.subsidiary.custrecord_ss_anz_sub_hdr_hght >
+	<#if hdr_height == 0>
+		<#assign hdr_height = 29>
+	</#if>
+	<!-- Get Header Height -->
+<body header="nlheader" header-height="${hdr_height}%" footer="nlfooter" footer-height="20pt" padding="0.3in 0.3in 0.3in 0.3in" size="A4">
+    <table style="width: 100%; margin-top: 10px;"><tr>
+	<td class="addressheader"><strong>${salesorder.shipaddress@label}</strong></td>
+	</tr>
+	<tr>
+	<td class="address">${salesorder.shipaddress}</td>
+	</tr></table>
+
+<table class="body" style="width: 100%; margin-top: 10px;"><tr>
+	<th>${record.trandate@label}</th>
+	<#if record.subsidiary.addressee?has_content>${subsidiary.addressee}</#if>
+  	<#if record.createdfrom.location?has_content><th>Location</th></#if>
+	<th>Sales Rep</th>
+  <th>Memo</th>
+	</tr>
+	<tr>
+	<td>${record.trandate}</td>
+    <#if record.createdfrom.location?has_content><td>${record.createdfrom.location}</td></#if>
+	<td>${salesorder.salesrep}</td>
+      <td>${record.memo}</td>
+	</tr></table>
+
+<#if record.item?has_content>
+
+<table class="itemtable" style="width: 100%; margin-top: 10px;"> 
+
+
+
+<thead>
+  <tr style="background-color: #e3e3e3;">
+    <th style="width: 20%;">Item</th>
+    <th style="width: 20%;">Description</th>
+    <th style="width: 20%;">Line Memo</th>
+    <th style="width: 10%; text-align: right;">Quantity</th>
+    <th style="width: 10%; text-align: right;">Shipped</th>
+
+  </tr>
+</thead>
+
+
+<#if record.showAddlItemsPackSlip == 'ALL'>
+
+<!-- start items -->
+<!-- <#list record.item as iflineitem><#list salesorder.item as salesline><#if salesline.line==iflineitem.orderline> -->
+	<!-- <tr>
+	<td colspan="12" style="width: 279px;"><span class="itemname">${salesline.item}</span><br />${salesline.description}</td>
+	<td align="right" colspan="4" style="width: 86px;">${salesline.quantity}</td>
+<td align="right" colspan="4" style="width: 86px;">${salesline.custcol_dce_linememo}</td>
+	<td align="right" colspan="4" style="width: 105px;">${salesline.quantitybackordered}</td>
+	 <td align="right" colspan="4" style="width: 46px;">${shipped}</td>
+	<td align="right" style="width: 72px;">&nbsp;</td>
+	<td align="right" style="width: 65px;">&nbsp;</td>
+	<td align="right" style="width: 47px;">&nbsp;</td>
+	</tr> -->
+
+	<!-- </#if></#list></#list> -->
+	<!-- end items -->
+	
+
+	
+	<#elseif record.showAddlItemsPackSlip == 'NONE'>
+	
+	<!-- start items from sales order -->
+	
+	<#list salesorder.item as salesline><#assign shipped=0><#list record.item as iflineitem><#if salesline.line==iflineitem.orderline><#assign shipped=iflineitem.quantity></#if></#list>
+	<!-- comparing the items on the Sales order with the items on the fulfilment, if the quantity and item are the same, the shipped collum will be populated with the quantity of the fulfilment -->
+
+	<tr>
+  <td><span class="itemname">${salesline.item}</span></td>
+  <td><span class="itemname">${salesline.description}</span></td>
+  <td style="text-align: right;">${salesline.custcol_dce_linememo}</td>
+  <td style="text-align: right;">${salesline.quantity}</td>
+  <td style="text-align: right;">${shipped}</td>
+  <td>&nbsp;</td>
+  <td>&nbsp;</td>
+</tr>
+
+
+	</#list>
+	<!-- end sales order items -->
+	
+	
+	<#elseif record.showAddlItemsPackSlip == 'UNFULFILLED'>
+	
+	<!-- start items from sales order -->
+	<!-- <#list salesorder.item as salesline><#assign shipped=0><#assign isInList=false><#list record.item as iflineitem><#if salesline.line==iflineitem.orderline><#assign shipped=iflineitem.quantity><#assign isInList=true></#if></#list><#if isInList || salesline.quantitybackordered != 0> -->
+	<!-- <tr>
+	<td colspan="12" style="width: 279px;"><span class="itemname">${salesline.item}</span><br />${salesline.description}</td>
+	<td align="right" colspan="4" style="width: 86px;">${salesline.quantity}</td>
+<td align="right" colspan="4" style="width: 86px;">${salesline.custcol_dce_linememo}</td>
+	<td align="right" colspan="4" style="width: 105px;">${salesline.quantitybackordered}</td>
+	 <td align="right" colspan="4" style="width: 46px;">${shipped}</td>
+	<td align="right" style="width: 72px;">&nbsp;</td>
+	<td align="right" style="width: 65px;">&nbsp;</td>
+	<td align="right" style="width: 47px;">&nbsp;</td>
+	</tr> -->
+
+	<!-- </#if></#list> -->
+	<!-- end sales order items -->
+	
+	</#if>
+
+	</table>
+
+</#if>
+
+<#if preferences.RETURNFORM && returnForm??>
+
+<hr /></#if>
+</body>
+</pdf>
