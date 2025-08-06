@@ -1,0 +1,185 @@
+{
+	"name": "utilities/config",
+	"description": "<p>Reads an attribute from config and templates object attributes into a string or object containing strings.\nThis is not a configurable module.</p>",
+	"members": [
+		{
+			"name": "accounting",
+			"description": "<p>Accounts internalid ids</p>",
+			"properties": [
+				{
+					"name": "debit_account",
+					"description": "<p>Account internal id to debit labour recovery journey lines.</p>",
+					"type": [
+						"number"
+					]
+				},
+				{
+					"name": "credit_account",
+					"description": "<p>Account internal id to credit labour recovery journey lines.</p>",
+					"type": [
+						"number"
+					]
+				},
+				{
+					"name": "asset_profitability_report",
+					"description": "<p>Field Service Asset Profitability Report internal id unique to the account.</p>",
+					"type": [
+						"number"
+					]
+				},
+				{
+					"name": "entity_profitability_report",
+					"description": "<p>Field Service Entity Profitability Report internal id unique to the account.</p>",
+					"type": [
+						"number"
+					]
+				}
+			]
+		},
+		{
+			"name": "billing",
+			"description": "<p>Billing rules</p>",
+			"properties": [
+				{
+					"name": "task",
+					"description": "<p>Set of task type rules to apply a default billing type</p>",
+					"type": [
+						"Array.<object>"
+					]
+				},
+				{
+					"name": "task[].project",
+					"description": "<p>Project types to match on</p>",
+					"type": [
+						"Array.<number>"
+					]
+				},
+				{
+					"name": "task[].case",
+					"description": "<p>Case types to match on</p>",
+					"type": [
+						"Array.<number>"
+					]
+				},
+				{
+					"name": "task[].task",
+					"description": "<p>Task types to match on</p>",
+					"type": [
+						"Array.<number>"
+					]
+				},
+				{
+					"name": "task[].billing",
+					"description": "<p>Default Billing Type to set on task</p>",
+					"type": [
+						"Array.<number>"
+					]
+				},
+				{
+					"name": "time",
+					"description": "<p>Resolves to true if the time and task context should be billable</p>",
+					"type": [
+						"boolean"
+					]
+				},
+				{
+					"name": "expense",
+					"description": "<p>Resolves to true if the expense category and task context should be billable</p>",
+					"type": [
+						"boolean"
+					]
+				},
+				{
+					"name": "consumable",
+					"description": "<p>Resolves to true if the consumable and task context should be billable</p>",
+					"type": [
+						"boolean"
+					]
+				}
+			]
+		},
+		{
+			"name": "icons",
+			"description": "<p>SVG Definitions with a 100 x 100 view box.</p>",
+			"properties": [
+				{
+					"name": "defs",
+					"description": "<p>Namespace for icon paths</p>",
+					"type": [
+						"object"
+					]
+				},
+				{
+					"name": "defs.default",
+					"description": "<p>Flag icon path</p>",
+					"type": [
+						"string"
+					]
+				}
+			]
+		},
+		{
+			"name": "program",
+			"description": "<p>Program definitions for projects and cases</p>",
+			"properties": [
+				{
+					"name": "project",
+					"description": "<p>Set of rules to generate a Program of Work for a Project.</p>",
+					"type": [
+						"Array.<object>"
+					]
+				}
+			]
+		},
+		{
+			"name": "tab",
+			"description": "<p>Tab internal ids. These properties are configured automaticatlly on install</p>",
+			"properties": [
+				{
+					"name": "tab.transaction",
+					"description": "<p>Label or internalid of the tab to attach form elements to.</p>",
+					"type": [
+						"string"
+					]
+				},
+				{
+					"name": "tab.entity",
+					"description": "<p>Label or internalid of the tab to attach form elements to.</p>",
+					"type": [
+						"string"
+					]
+				},
+				{
+					"name": "tab.item",
+					"description": "<p>Label or internalid of the tab to attach form elements to.</p>",
+					"type": [
+						"string"
+					]
+				},
+				{
+					"name": "tab.crm",
+					"description": "<p>Label or internalid of the tab to attach form elements to.</p>",
+					"type": [
+						"string"
+					]
+				},
+				{
+					"name": "tab.asset",
+					"description": "<p>Label or internalid of the tab to attach form elements to.</p>",
+					"type": [
+						"string"
+					]
+				}
+			]
+		},
+		{
+			"name": "warranty",
+			"description": "<p>Warranty projects to create when an asset is created</p>",
+			"type": [
+				"Object"
+			]
+		}
+	],
+	"methods": [],
+	"id": "utilities-config"
+}

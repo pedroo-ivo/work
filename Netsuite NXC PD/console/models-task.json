@@ -1,0 +1,28 @@
+{
+	"name": "models/task",
+	"members": [
+		{
+			"name": "defaults",
+			"description": "<p>Field map</p>",
+			"type": [
+				"object"
+			]
+		},
+		{
+			"name": "map",
+			"description": "<p>Field map</p>",
+			"type": [
+				"object"
+			]
+		},
+		{
+			"name": "record",
+			"description": "<p>Record type</p>",
+			"type": [
+				"string"
+			]
+		}
+	],
+	"methods": [],
+	"id": "models-task"
+}

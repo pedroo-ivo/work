@@ -1,0 +1,56 @@
+{
+	"name": "utilities/merge",
+	"description": "<p>Utility to deep merge objects</p>",
+	"parameters": [
+		{
+			"name": "target",
+			"description": "<p>Object to merge onto</p>",
+			"type": [
+				"object"
+			]
+		},
+		{
+			"name": "values",
+			"description": "<p>Object to import</p>",
+			"type": [
+				"object"
+			]
+		},
+		{
+			"name": "options.regexp",
+			"description": "<p>If the value key is a pattern, merge into all matching target keys.\nThe value will be templated with capture groups for each matched key.</p>",
+			"type": [
+				"boolean"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.delete",
+			"description": "<p>Delete keys when merging in null value.</p>",
+			"type": [
+				"boolean"
+			],
+			"optional": true,
+			"defaultvalue": true
+		},
+		{
+			"name": "optinos.foldcase",
+			"description": "<p>Merges keys with case-insensitive match. New keys are added as is.</p>",
+			"type": [
+				"booleam"
+			],
+			"optional": true,
+			"defaultvalue": true
+		}
+	],
+	"returns": [
+		{
+			"description": "<p>Transformed object</p>",
+			"type": [
+				"*"
+			]
+		}
+	],
+	"methods": [],
+	"id": "utilities-merge"
+}

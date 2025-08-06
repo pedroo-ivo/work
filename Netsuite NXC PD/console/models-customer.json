@@ -1,0 +1,41 @@
+{
+	"name": "models/customer",
+	"members": [
+		{
+			"name": "assets",
+			"description": "<p>Assets available to be serviced by the selected Customer. The current record model and the selected Customer model is in scope.</p>",
+			"type": [
+				"Object"
+			],
+			"parameters": [
+				{
+					"name": "customer",
+					"description": "<p>Selected Customer model.</p>",
+					"type": [
+						"Customer"
+					]
+				}
+			]
+		},
+		{
+			"name": "map",
+			"description": "<p>Field map</p>",
+			"type": [
+				"object"
+			],
+			"properties": [
+				{
+					"name": "assets",
+					"description": "<p>Assets that are valid to create records against. Overwrite this to refer to Customer fields.\nWhen <em>true</em> all Assets are available. When <em>false</em> no Assets can be selected. Otherwise differ to a Customer search.</p>",
+					"type": [
+						"true",
+						"false",
+						"*"
+					]
+				}
+			]
+		}
+	],
+	"methods": [],
+	"id": "models-customer"
+}

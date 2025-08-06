@@ -1,0 +1,22 @@
+{
+	"name": "views/newnull",
+	"description": "<p>New Null Component\nOn Parent records, the Child Records sublist and Create New menu show 'null' instead of the record name.\nThis replaces 'null' in the button and options' labels with the record name from the form.</p>",
+	"members": [
+		{
+			"name": "hidden",
+			"description": "<p>This view is to be shown or hidden</p>",
+			"type": [
+				"Boolean"
+			]
+		},
+		{
+			"name": "name",
+			"description": "<p>Unique name of the html page field.</p>",
+			"type": [
+				"String"
+			]
+		}
+	],
+	"methods": [],
+	"id": "views-newnull"
+}

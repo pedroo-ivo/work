@@ -1,0 +1,36 @@
+{
+	"name": "views/project/journal",
+	"description": "<p>Project Journal Component\nAdds a button to view mode of Projects with unrecoverd Time to create a Labour Recovery Journal.</p>",
+	"members": [
+		{
+			"name": "hidden",
+			"description": "<p>This view is to be shown or hidden</p>",
+			"type": [
+				"Boolean"
+			]
+		},
+		{
+			"name": "label",
+			"description": "<p>Button label</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "name",
+			"description": "<p>Button name</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "success",
+			"description": "<p>Alert text when the Journal is successfully created.</p>",
+			"type": [
+				"String"
+			]
+		}
+	],
+	"methods": [],
+	"id": "views-project-journal"
+}

@@ -1,0 +1,22 @@
+{
+	"name": "views/schedule",
+	"description": "<p>Scheduled Script Banner Component\nAdds schedule script status banners to forms in view mode.</p>",
+	"members": [
+		{
+			"name": "hidden",
+			"description": "<p>This view is to be shown or hidden.</p>",
+			"type": [
+				"Boolean"
+			]
+		},
+		{
+			"name": "name",
+			"description": "<p>Unique name of the custom page inline html field.</p>",
+			"type": [
+				"String"
+			]
+		}
+	],
+	"methods": [],
+	"id": "views-schedule"
+}

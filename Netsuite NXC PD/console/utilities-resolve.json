@@ -1,0 +1,170 @@
+{
+	"name": "utilities/resolve",
+	"description": "<p>Utility to transform an object recursively for searches subqueries, templating, email creation, file loading/creation, array merging/sorting/ordering, object flattening.</p>",
+	"parameters": [
+		{
+			"name": "data",
+			"description": "<p>Data to recurse and transform</p>",
+			"type": [
+				"*"
+			]
+		},
+		{
+			"name": "data.template",
+			"description": "<p>Freemarker template to render with the data found on all sibling properties. Use the property name to access the data in the template. The rendered string is returned.</p>",
+			"type": [
+				"String"
+			],
+			"optional": true
+		},
+		{
+			"name": "data.boolean",
+			"description": "<p>Returns true if all sibling properties are truthy. Array values must all be truthy to pass. Setting to false passes when all values are falsey.</p>",
+			"type": [
+				"Boolean"
+			],
+			"optional": true
+		},
+		{
+			"name": "data.parse",
+			"description": "<p>JSON string to parse and return.</p>",
+			"type": [
+				"String"
+			],
+			"optional": true
+		},
+		{
+			"name": "data.array",
+			"description": "<p>Concatenates and all property arrays as a single array. If array is a string, the concatenated array is sorted by that property.</p>",
+			"type": [
+				"Boolean",
+				"String"
+			],
+			"optional": true
+		},
+		{
+			"name": "data.sort",
+			"description": "<p>Sort the concatenated array by this property before returning.</p>",
+			"type": [
+				"String"
+			],
+			"optional": true
+		},
+		{
+			"name": "data.join",
+			"description": "<p>Join the concatenated array before returning as a string. If join is a string, that value is used as the seperator.</p>",
+			"type": [
+				"Boolean",
+				"String"
+			],
+			"optional": true
+		},
+		{
+			"name": "data.file",
+			"description": "<p>Loads and returns a file when this is a path string or internalid number. If file is a file extension, a file is created from the content property and is returned.</p>",
+			"type": [
+				"String",
+				"Number"
+			],
+			"optional": true
+		},
+		{
+			"name": "data.contents",
+			"description": "<p>Content of the file to create. If the file option is 'pdf', the content is converted from xml to pdf before creating.</p>",
+			"type": [
+				"String"
+			],
+			"optional": true
+		},
+		{
+			"name": "data.name",
+			"description": "<p>Name of the file to create. If no name is defined, name is set to the title xml tag found in the content property.</p>",
+			"type": [
+				"String"
+			],
+			"optional": true
+		},
+		{
+			"name": "data.record",
+			"description": "<p>Returns either a record search or loaded record of this record type.</p>",
+			"type": [
+				"String"
+			],
+			"optional": true
+		},
+		{
+			"name": "data.id",
+			"description": "<p>Loads and the record with this internalid.</p>",
+			"type": [
+				"Number"
+			],
+			"optional": true
+		},
+		{
+			"name": "data.filters",
+			"description": "<p>Searches the record using these filters.</p>",
+			"type": [
+				"*"
+			],
+			"optional": true
+		},
+		{
+			"name": "data.map",
+			"description": "<p>Searches the record using this field map.</p>",
+			"type": [
+				"*"
+			],
+			"optional": true
+		},
+		{
+			"name": "data.form",
+			"description": "<p>Extends the map property with all fields found on a form.</p>",
+			"type": [
+				"*"
+			],
+			"optional": true
+		},
+		{
+			"name": "data.body",
+			"description": "<p>When body and recipients properties are present, consider this an email definition.</p>",
+			"type": [
+				"String"
+			],
+			"optional": true
+		},
+		{
+			"name": "data.recipients",
+			"description": "<p>When body and recipients properties are present, consider this an email definition.</p>",
+			"type": [
+				"Array.<String>"
+			],
+			"optional": true
+		},
+		{
+			"name": "data.subject",
+			"description": "<p>When no email subject is defined, subject is set to the title tag found in the body property.</p>",
+			"type": [
+				"String"
+			],
+			"optional": true
+		},
+		{
+			"name": "data.options",
+			"description": "<p>The option in the array with the lowest value for the selected property has selected set to true. All other options have selected removed.</p>",
+			"type": [
+				"Array.<Object>"
+			],
+			"optional": true
+		}
+	],
+	"returns": [
+		{
+			"description": "<p>Transformed object</p>",
+			"type": [
+				"*"
+			]
+		}
+	],
+	"methods": [],
+	"id": "utilities-resolve"
+}

@@ -1,0 +1,70 @@
+{
+	"name": "views/case/projects",
+	"description": "<p>Case Projects Component\nAdds a select to edit mode of Cases to select active projects for the Asset.</p>",
+	"members": [
+		{
+			"name": "hidden",
+			"description": "<p>This view is to be shown or hidden</p>",
+			"type": [
+				"Boolean"
+			]
+		},
+		{
+			"name": "label",
+			"description": "<p>Select label</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "name",
+			"description": "<p>Select name</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "options",
+			"description": "<p>Resolvable template for the select options for the current case.</p>",
+			"properties": [
+				{
+					"name": "id",
+					"description": "<p>Project id</p>",
+					"type": [
+						"String"
+					]
+				},
+				{
+					"name": "label",
+					"description": "<p>Label to use for the project</p>",
+					"type": [
+						"String"
+					]
+				},
+				{
+					"name": "selected",
+					"description": "<p>Options with a truthy selected value are automatically selected in ascending order.</p>",
+					"type": [
+						"String"
+					]
+				}
+			]
+		},
+		{
+			"name": "refreshFields",
+			"description": "<p>Fields that trigger refresh</p>",
+			"type": [
+				"Array.<String>"
+			]
+		},
+		{
+			"name": "showFields",
+			"description": "<p>Fields required to show active projects field</p>",
+			"type": [
+				"Array.<String>"
+			]
+		}
+	],
+	"methods": [],
+	"id": "views-case-projects"
+}

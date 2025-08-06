@@ -1,0 +1,6 @@
+{
+	"name": "views/asset/parent",
+	"description": "<p>Asset Parent Component\nEnable and disable fields</p>",
+	"methods": [],
+	"id": "views-asset-parent"
+}

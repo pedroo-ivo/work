@@ -1,0 +1,38 @@
+{
+	"name": "views/case/tasks",
+	"description": "<p>Case Tasks Component\nBuilds and manages sublist on the case to add tasks</p>",
+	"members": [
+		{
+			"name": "assignees",
+			"description": "<p>Options for the assigned fields</p>"
+		},
+		{
+			"name": "available",
+			"description": "<p>Label for available assignees</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "el",
+			"description": "<p>Form elements</p>"
+		},
+		{
+			"name": "hidden",
+			"description": "<p>This view is to be shown or hidden</p>",
+			"type": [
+				"Boolean"
+			]
+		},
+		{
+			"name": "skills",
+			"description": "<p>Options for the skills field</p>"
+		},
+		{
+			"name": "types",
+			"description": "<p>Options for the type fields</p>"
+		}
+	],
+	"methods": [],
+	"id": "views-case-tasks"
+}

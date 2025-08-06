@@ -1,0 +1,29 @@
+{
+	"name": "views/asset/address",
+	"description": "<p>Asset Address Component\nReplaces the [Asset] address book field with a select of [Customer] addresses.</p>",
+	"members": [
+		{
+			"name": "available",
+			"description": "<p>Template for the label of the custom page Select field.</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "hidden",
+			"description": "<p>This view is to be shown or hidden.</p>",
+			"type": [
+				"Boolean"
+			]
+		},
+		{
+			"name": "name",
+			"description": "<p>Unique name of the custom page Select field.</p>",
+			"type": [
+				"String"
+			]
+		}
+	],
+	"methods": [],
+	"id": "views-asset-address"
+}

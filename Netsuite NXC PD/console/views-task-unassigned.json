@@ -1,0 +1,15 @@
+{
+	"name": "views/task/unassigned",
+	"description": "<p>Task Unassigned Component\nAllow unassigned tasks for new scheduler panel</p>",
+	"members": [
+		{
+			"name": "hidden",
+			"description": "<p>This view is to be shown or hidden</p>",
+			"type": [
+				"Boolean"
+			]
+		}
+	],
+	"methods": [],
+	"id": "views-task-unassigned"
+}

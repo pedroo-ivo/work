@@ -1,0 +1,43 @@
+{
+	"name": "views/customer/profitability",
+	"description": "<p>Customer Profitability Report Component\nAdds a button to view mode of Customer to view the Profitability Report.</p>",
+	"members": [
+		{
+			"name": "hidden",
+			"description": "<p>This view is to be shown or hidden</p>",
+			"type": [
+				"Boolean"
+			]
+		},
+		{
+			"name": "label",
+			"description": "<p>Button label</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "name",
+			"description": "<p>Button name</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "report",
+			"description": "<p>Asset Profitability report internal id</p>",
+			"type": [
+				"Number"
+			]
+		},
+		{
+			"name": "url",
+			"description": "<p>Url template to the report</p>",
+			"type": [
+				"String"
+			]
+		}
+	],
+	"methods": [],
+	"id": "views-customer-profitability"
+}

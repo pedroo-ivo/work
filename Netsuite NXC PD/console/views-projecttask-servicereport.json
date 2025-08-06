@@ -1,0 +1,50 @@
+{
+	"name": "views/projecttask/servicereport",
+	"description": "<p>Project Task Service Report Component\nAdds a button to view mode of Completed Tasks to preview the Service Report pdf and email to the customer.</p>",
+	"members": [
+		{
+			"name": "delay",
+			"description": "<p>Delay in milliseconds before confirming with the user to send the email.</p>",
+			"type": [
+				"Number"
+			]
+		},
+		{
+			"name": "hidden",
+			"description": "<p>This view is to be shown or hidden</p>",
+			"type": [
+				"Boolean"
+			]
+		},
+		{
+			"name": "label",
+			"description": "<p>Button label</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "name",
+			"description": "<p>Button name</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "send",
+			"description": "<p>Confirm text before sending the email. Clear this value to only preview the pdf.</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "success",
+			"description": "<p>Alert text when the email is successfully sent.</p>",
+			"type": [
+				"String"
+			]
+		}
+	],
+	"methods": [],
+	"id": "views-projecttask-servicereport"
+}

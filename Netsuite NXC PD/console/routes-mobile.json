@@ -1,0 +1,504 @@
+{
+	"name": "routes/mobile",
+	"description": "<p>Mobile web app server</p>",
+	"members": [
+		{
+			"name": "actions",
+			"description": "<p>Actions</p>"
+		},
+		{
+			"name": "addable",
+			"description": "<p>Show the new event button</p>",
+			"type": [
+				"Boolean"
+			]
+		},
+		{
+			"name": "administrators",
+			"description": "<p>NetSuite Users in any of these roles are considered Mobile Administrators allowing them to generate mobile invites\nfor other users and to login as another Mobile User. Roles with Field Service Mobile check will show here by default.</p>",
+			"type": [
+				"Array.<Number>"
+			]
+		},
+		{
+			"name": "asset",
+			"description": "<p>Resource that presents information about the Asset or one of its child assets.</p>",
+			"type": [
+				"Object"
+			],
+			"parameters": [
+				{
+					"name": "options.asset",
+					"description": "<p>Internalid of child asset to show.</p>",
+					"type": [
+						"Number"
+					],
+					"optional": true
+				}
+			]
+		},
+		{
+			"name": "consumables",
+			"description": "<p>Resource that allows the user to consume inventory from their warehouse.</p>",
+			"type": [
+				"Object"
+			],
+			"parameters": [
+				{
+					"name": "options.asset",
+					"description": "<p>Internalid of child asset to consume part against.</p>",
+					"type": [
+						"Number"
+					],
+					"optional": true
+				}
+			]
+		},
+		{
+			"name": "contact",
+			"description": "<p>Contact</p>"
+		},
+		{
+			"name": "details",
+			"description": "<p>Details Resource.</p>",
+			"type": [
+				"object"
+			]
+		},
+		{
+			"name": "event",
+			"description": "<p>Events to load for the current User. This can be configured to source different record types but by default only CRM Tasks are shown.</p>",
+			"type": [
+				"object"
+			],
+			"properties": [
+				{
+					"name": "event.record",
+					"description": "<p>Record type</p>",
+					"type": [
+						"string"
+					]
+				},
+				{
+					"name": "event.filters",
+					"description": "<p>Search filters to apply to the record type</p>",
+					"type": [
+						"filterexpression"
+					]
+				},
+				{
+					"name": "event.map",
+					"description": "<p>Field map of search columns and fields. These attributes will be available in definitions for Resources and Articles.</p>",
+					"type": [
+						"object"
+					]
+				},
+				{
+					"name": "event.map.id",
+					"description": "<p>Must include an id attribute who's value will be in the pattern of &quot;{modelid}-{internalid}&quot;.</p>",
+					"type": [
+						"string"
+					]
+				},
+				{
+					"name": "event.map.label",
+					"description": "<p>Label for the event.</p>",
+					"type": [
+						"string"
+					]
+				},
+				{
+					"name": "event.map.sublabel",
+					"description": "<p>Sublabel for the event.</p>",
+					"type": [
+						"string"
+					],
+					"optional": true
+				},
+				{
+					"name": "event.map.startdate",
+					"description": "<p>Start date time stamp for the event.</p>",
+					"type": [
+						"string"
+					]
+				},
+				{
+					"name": "event.map.enddate",
+					"description": "<p>End date time stamp for the event.</p>",
+					"type": [
+						"string"
+					]
+				},
+				{
+					"name": "event.map.address",
+					"description": "<p>Address of the event in Google Api friendly format.</p>",
+					"type": [
+						"string"
+					]
+				},
+				{
+					"name": "event.map.latitude",
+					"description": "<p>Latitude of the event.</p>",
+					"type": [
+						"number"
+					]
+				},
+				{
+					"name": "event.map.longitude",
+					"description": "<p>Longitude of the event.</p>",
+					"type": [
+						"number"
+					]
+				},
+				{
+					"name": "event.map.timezone",
+					"description": "<p>Timezone of the event in NetSuite compatible Olsom values. Requests for the Event, it's Resources, and its Articles will be run in this timezone.</p>",
+					"type": [
+						"string"
+					]
+				},
+				{
+					"name": "event.resources",
+					"description": "<p>Set of rules to lookup which Resources to load for the user.\nProperties added to the rules will filter the attribute on the user.</p>",
+					"type": [
+						"Array.<object>"
+					]
+				},
+				{
+					"name": "event.resources[].resources",
+					"description": "<p>Resource ids to load for the containing rule.</p>",
+					"type": [
+						"Array.<string>"
+					]
+				}
+			]
+		},
+		{
+			"name": "expenses",
+			"description": "<p>Expenses</p>"
+		},
+		{
+			"name": "files",
+			"description": "<p>Resource that allows the user to upload and attach files to the current task.</p>",
+			"type": [
+				"Object"
+			],
+			"parameters": [
+				{
+					"name": "options.asset",
+					"description": "<p>Internalid of child asset to associate the file with.</p>",
+					"type": [
+						"Number"
+					],
+					"optional": true
+				}
+			]
+		},
+		{
+			"name": "history",
+			"description": "<p>Resource that shows the service history for the event Asset or one of its child assets.</p>",
+			"type": [
+				"Object"
+			],
+			"parameters": [
+				{
+					"name": "options.asset",
+					"description": "<p>Internalid of child asset to show history for.</p>",
+					"type": [
+						"Number"
+					],
+					"optional": true
+				}
+			]
+		},
+		{
+			"name": "imagesize",
+			"description": "<p>Default maximum dimensions of images uploaded from file inputs</p>",
+			"type": [
+				"Number"
+			]
+		},
+		{
+			"name": "import",
+			"description": "<p>JavaScript, JSON, and CSS file paths to append to the head of the document. These files are cached for\noffline useage and will trigger an update and redownload all files when any import id changes. JSON files\nare loaded as a JavaScript global named after the import id.</p>",
+			"type": [
+				"Object"
+			]
+		},
+		{
+			"name": "inject",
+			"description": "<p>Optional HTML to append to the head of the document. Useful for adding styles and scripts for customization.</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "inventory",
+			"description": "<p>Inventory Resource to load datalists of items that can be used on Task Resources. The configured but unprocessed JSON for\nthese Resources can be accessed in the Mobile suitelet by navigating the Mobile to the url mobile/task.</p>",
+			"type": [
+				"object"
+			],
+			"parameters": [
+				{
+					"name": "options.location",
+					"description": "<p>Location internalid or array of locations internalids to load inventory from.</p>",
+					"type": [
+						"Number",
+						"Array.<Number>"
+					],
+					"optional": true
+				}
+			],
+			"properties": [
+				{
+					"name": "consumable",
+					"description": "<p>Datalist element of consumable items available in the Users location.</p>",
+					"type": [
+						"object"
+					]
+				},
+				{
+					"name": "consumable.options",
+					"description": "<p>Object to resolve into array of options. Sorts on the label property.</p>",
+					"type": [
+						"object"
+					]
+				},
+				{
+					"name": "consumable.options.group",
+					"description": "<p>Item Groups.</p>",
+					"type": [
+						"object"
+					]
+				},
+				{
+					"name": "consumable.options.location",
+					"description": "<p>Non Serialized, Non Bin, Non Lot Numbered inventory when Inventory Locations is disabled.</p>",
+					"type": [
+						"object"
+					]
+				},
+				{
+					"name": "consumable.options.inventorylocation",
+					"description": "<p>Non Serialized, Non Bin, Non Lot inventory when Inventory Locations is enabled.</p>",
+					"type": [
+						"object"
+					]
+				},
+				{
+					"name": "consumable.options.inventorynumber",
+					"description": "<p>Serialized or Lot Numbered inventory.</p>",
+					"type": [
+						"object"
+					]
+				},
+				{
+					"name": "consumable.options.inventorynumberbinonhand",
+					"description": "<p>Bin Numbered, Serialized, or Lot Numbered inventory when Advanced Inventory enabled.</p>",
+					"type": [
+						"object"
+					]
+				},
+				{
+					"name": "consumable.options.binnumber",
+					"description": "<p>Bin Numbered, Non Serialized, Non Lot Numbered inventory when Advanced Inventory disabled.</p>",
+					"type": [
+						"object"
+					]
+				},
+				{
+					"name": "consumable.options.binonhand",
+					"description": "<p>Bin Numbered, Non Serialized, Non Lot Numbered inventory when Advanced Inventory enabled.</p>",
+					"type": [
+						"object"
+					]
+				},
+				{
+					"name": "orderable",
+					"description": "<p>Datalist element of orderable and quotable items.</p>",
+					"type": [
+						"object"
+					]
+				},
+				{
+					"name": "orderable.options",
+					"description": "<p>Object to resolve into array of options. Sorts on the label property.</p>",
+					"type": [
+						"object"
+					]
+				},
+				{
+					"name": "orderable.options.location",
+					"description": "<p>Quotable and Orderable items</p>",
+					"type": [
+						"object"
+					]
+				}
+			]
+		},
+		{
+			"name": "notes",
+			"description": "<p>Resource that allows the user to create notes against the current event.</p>",
+			"type": [
+				"Object"
+			],
+			"parameters": [
+				{
+					"name": "options.asset",
+					"description": "<p>Internalid of child asset to create the note against.</p>",
+					"type": [
+						"Number"
+					],
+					"optional": true
+				}
+			]
+		},
+		{
+			"name": "onsite",
+			"description": "<p>Distance in kilometers that a Resource is considered on site for an Event.</p>",
+			"type": [
+				"Number"
+			]
+		},
+		{
+			"name": "order",
+			"description": "<p>Order\ndisabled when the order is pending receipt</p>"
+		},
+		{
+			"name": "quote",
+			"description": "<p>Quotes</p>"
+		},
+		{
+			"name": "receive",
+			"description": "<p>Receive\nNo bin selection</p>"
+		},
+		{
+			"name": "return",
+			"description": "<p>Return Transfer orders transfering from the user location</p>"
+		},
+		{
+			"name": "salesorder",
+			"description": "<p>Sales Order resource allows users to view or edit Sales Orders in the field.\nDefault configuration shows the first Sales Order found on the current project.\nItem group header and footer lines and those not created from this task on the mobile are readonly.\nLines that are added or edited from the current task that are fulfillable will automatically be fulfilled on save.</p>\n<h5>Known Issues</h5>\n<ul><li>Deleting sales order lines in or above item groups will cause a syncing error.</li>\n<li>Multiple users concurrently editing the Sales Order could overwrite changes.</li>\n<li>Accounts with basic inventory will fulfill Bin items but not show on the Sales Order line.</li>\n<li>Maximum quantity not enforced based on item availability at selected location. This could put the item in backorder or cause a syncing error with inventory detail.</li>\n<li>Doesnt show tax or shipping line.</li>\n<li>Does not apply billing rule logic.</li></ul>"
+		},
+		{
+			"name": "times",
+			"description": "<p>Resource that allows the user to log time.</p>",
+			"type": [
+				"Object"
+			],
+			"parameters": [
+				{
+					"name": "options.asset",
+					"description": "<p>Internalid of child asset to log time against.</p>",
+					"type": [
+						"Number"
+					],
+					"optional": true
+				}
+			]
+		},
+		{
+			"name": "user",
+			"description": "<p>Records in NetSuite that are considered Mobile Users.  This is a hash of Model definitions\nthat relate a user to a record. Any model properties or functions can be defined including the sync function.</p>",
+			"type": [
+				"object"
+			],
+			"properties": [
+				{
+					"name": "record",
+					"description": "<p>Record type</p>",
+					"type": [
+						"string"
+					]
+				},
+				{
+					"name": "filters",
+					"description": "<p>Search filters to apply to the record type</p>",
+					"type": [
+						"filterexpression"
+					]
+				},
+				{
+					"name": "map",
+					"description": "<p>Field map of search columns and fields. These attributes will be available in definitions for resources using the template tag <code>{user.*}</code>. They are also used to match on resource rule lookups.</p>",
+					"type": [
+						"object"
+					]
+				},
+				{
+					"name": "map.id",
+					"description": "<p>Must be in the pattern of <code>&quot;{recordtype}-{internalid}&quot;</code>.</p>",
+					"type": [
+						"string"
+					]
+				},
+				{
+					"name": "map.label",
+					"description": "<p>Name to show for the User</p>",
+					"type": [
+						"string"
+					]
+				},
+				{
+					"name": "map.email",
+					"description": "<p>Email address to identify the User for Authentication</p>",
+					"type": [
+						"string"
+					]
+				},
+				{
+					"name": "map.password",
+					"description": "<p>Encrypted password to use for Authentication when the User does not have NetSuite access.</p>",
+					"type": [
+						"string"
+					]
+				},
+				{
+					"name": "map.latitude",
+					"description": "<p>Latitude of the user.</p>",
+					"type": [
+						"number"
+					]
+				},
+				{
+					"name": "map.longitude",
+					"description": "<p>Longitude of the user.</p>",
+					"type": [
+						"number"
+					]
+				},
+				{
+					"name": "map.language",
+					"description": "<p>Language preference for the User in NetSuite format language values. Requests for the User, Event, it's Resources, and its Articles will be run in this timezone.</p>",
+					"type": [
+						"string"
+					]
+				},
+				{
+					"name": "map.*",
+					"description": "<p>Optional additional attributes can be added to make available for resource lookups and variables</p>",
+					"type": [
+						"*"
+					],
+					"optional": true
+				},
+				{
+					"name": "resources",
+					"description": "<p>Set of rules to lookup which Resources to load for the user.\nProperties added to the rules will filter the attribute on the user.</p>",
+					"type": [
+						"Array.<object>"
+					]
+				},
+				{
+					"name": "resources[].resources",
+					"description": "<p>Resource ids to load for the containing rule.</p>",
+					"type": [
+						"Array.<string>"
+					]
+				}
+			]
+		}
+	],
+	"methods": [],
+	"id": "routes-mobile"
+}

@@ -1,0 +1,43 @@
+{
+	"name": "views/assetcustomer",
+	"description": "<p>Asset Customer Fields Component</p>\n<p>Manages the selectable options for the Customer and Asset fields on Transactions, Project, Case, and Task forms.\nWhen an Asset or Customer is selected, the other field will filter to options that are valid for that value.\nThe first field the user selects will initiate filtering of the other field.\nTo remove filtering of the second field, the user must clear the first field.</p>\n<p>Over time, an Asset and Customer relationship may change and an old record may have values that are no longer valid.\nWhen these records are edited, the form will not clear the invalid values unless the Asset or Customer is changed.</p>\n<p>The options that are available to select are firstly defined by the models/asset.map.customers property\nand the models/customer.map.assets property.\nWhen <i>true</i>, all options are available and no filtering is applied.\nWhen <i>false</i>, no options can be selected and filtering will be applied with no options.\nWhen any other value, filtering will be applied with the options defined by models/asset.customers and models/customer.assets.</p>",
+	"members": [
+		{
+			"name": "assetFilter",
+			"description": "<p>Name of the filtered Asset select field that is shown when filtering is applied.</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "assetOption",
+			"description": "<p>Asset option map.</p>",
+			"type": [
+				"Object"
+			]
+		},
+		{
+			"name": "customerFilter",
+			"description": "<p>Name of the filtered Customer select field that is shown when filtering is applied.</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "customerOption",
+			"description": "<p>Customers option map.</p>",
+			"type": [
+				"Object"
+			]
+		},
+		{
+			"name": "hidden",
+			"description": "<p>This view will be active when the form is in create/edit/copy mode and the Asset and Customer fields are visible.</p>",
+			"type": [
+				"Boolean"
+			]
+		}
+	],
+	"methods": [],
+	"id": "views-assetcustomer"
+}

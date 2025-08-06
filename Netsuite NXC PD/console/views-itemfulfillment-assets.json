@@ -1,0 +1,103 @@
+{
+	"name": "views/itemfulfillment/assets",
+	"description": "<p>Item Fulfillment Assets Component\nAdds a sublist to Itemfulfillment that creates or updates Assets records from fulfilled Asset Items</p>",
+	"members": [
+		{
+			"name": "element",
+			"description": "<p>Form element definitions.</p>",
+			"type": [
+				"Object"
+			],
+			"properties": [
+				{
+					"name": "element.list",
+					"description": "<p>Asset sublist.</p>",
+					"type": [
+						"Object"
+					]
+				},
+				{
+					"name": "element.item",
+					"description": "<p>Source the item from the transaction line. This is\npopulated with script from the fulfilled line.</p>",
+					"type": [
+						"Object"
+					]
+				},
+				{
+					"name": "element.serial",
+					"description": "<p>Source the serial number from the transaction line.\nThis is populated with script from the fulfilled line\ninventory detail.</p>",
+					"type": [
+						"Object"
+					]
+				},
+				{
+					"name": "element.id",
+					"description": "<p>Link to existing Asset record. This is populated with\nscript when a matching Asset record is found.</p>",
+					"type": [
+						"Object"
+					]
+				},
+				{
+					"name": "element.customer",
+					"description": "<p>Sources the customer from the transaction body field.</p>",
+					"type": [
+						"Object"
+					]
+				},
+				{
+					"name": "element.parent",
+					"description": "<p>Sources the parent from the transaction body field.</p>",
+					"type": [
+						"Object"
+					]
+				},
+				{
+					"name": "element.addressbook",
+					"description": "<p>Source the address id from the transaction ship address.</p>",
+					"type": [
+						"Object"
+					]
+				},
+				{
+					"name": "element.addresstext",
+					"description": "<p>Source the address text from the transaction ship address\ntext. When present, this is populated with script to format\nthe address and remove the Attention and Addressee.</p>",
+					"type": [
+						"Object"
+					]
+				}
+			]
+		},
+		{
+			"name": "error",
+			"description": "<p>User error messages.</p>",
+			"type": [
+				"Object"
+			],
+			"properties": [
+				{
+					"name": "error.required",
+					"description": "<p>Alert text when an Asset does not have the require fields\ncompleted. The scope of this template is a hash of the\nmissing required element name and labels.</p>",
+					"type": [
+						"String"
+					]
+				},
+				{
+					"name": "error.duplicate",
+					"description": "<p>Alert text when the Asset line is not unique. The scope\nof this template is the duplicate line data.</p>",
+					"type": [
+						"String"
+					]
+				}
+			]
+		},
+		{
+			"name": "hidden",
+			"description": "<p>This view is to be shown or hidden</p>",
+			"type": [
+				"Boolean"
+			]
+		}
+	],
+	"methods": [],
+	"id": "views-itemfulfillment-assets"
+}

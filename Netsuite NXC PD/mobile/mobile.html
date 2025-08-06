@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+		/>
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="msapplication-tap-highlight" content="no" />
+		<link rel="stylesheet" type="text/css" href="mobile.css" />
+		<!-- Fix for IS01040 - Access window.indexedDB at a very early stage to give time to load -->
+		<script type="text/javascript">
+			window.indexedDB;
+		</script>
+		<script
+			type="text/javascript"
+			language="javascript"
+			src="https://maps.googleapis.com/maps/api/js"
+			defer
+		></script>
+		<script
+			type="text/javascript"
+			language="javascript"
+			src="https://maps.oracle.com/elocation/jslib/oracleelocationv4.2.js"
+		></script>
+		<script type="text/javascript" language="javascript" src="mobile.js" defer></script>
+		<title>Field Service Mobile</title>
+		<link rel="icon" type="image/png" href="./icon/favicon-96x96.png" sizes="96x96" />
+		<link rel="icon" type="image/svg+xml" href="./icon/favicon.svg" />
+		<link rel="shortcut icon" href="./icon/favicon.ico" />
+		<link rel="apple-touch-icon" sizes="180x180" href="./icon/apple-touch-icon.png" />
+		<link rel="manifest" crossorigin="use-credentials" href="./icon/site.webmanifest" />
+	</head>
+	<body></body>
+</html>

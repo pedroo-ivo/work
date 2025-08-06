@@ -1,0 +1,20 @@
+<html>
+	<head>
+		<title>ACTION REQUIRED: Field Service Management Account Key Rotation for Account ${ acct.number }</title>
+	</head>
+	<body>
+		Hi,<br/>
+		<br/>
+		The account key used by the Field Service Management module is more than 90 days old. To ensure continued security of your account it is best practice to rotate this key every 90 days.<br/>
+		Please rotate your account key by following the steps below:<br/>
+		<ol>
+			<li>Log into NetSuite account ${ acct.number } using an Administrator role.</li>
+			<li>Navigate to the Field Service Management Setup form by following these links in the NetSuite menu bar: <i>Field Service → Administration → Setup</i>.</li>
+			<li>Enter a new password into the <i>Account Key</i> field.</li>
+			<li>Submit the page.</li>
+		</ol>
+		Once this account key has been rotated, any users currently logged in through the Field Service Management mobile application will be asked to re-authenticate.<br/>
+		<br/>
+		NOTE: This is a system generated reminder. You are receiving this reminder as you currently hold an Administrator role in the account ${ acct.number }.
+	</body>
+</html>

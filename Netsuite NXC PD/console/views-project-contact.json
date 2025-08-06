@@ -1,0 +1,33 @@
+{
+	"name": "views/project/contact",
+	"description": "<p>Project Contact Component\nAdd a contact field to the project on create to set the Primary Contact.</p>",
+	"members": [
+		{
+			"name": "hidden",
+			"description": "<p>This view is to be shown or hidden.</p>",
+			"type": [
+				"Boolean"
+			]
+		},
+		{
+			"name": "label",
+			"description": "<p>Select label</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "name",
+			"description": "<p>Unique name of the custom page Select field.</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "options",
+			"description": "<p>Resolvable template for the select options for the current project.</p>"
+		}
+	],
+	"methods": [],
+	"id": "views-project-contact"
+}

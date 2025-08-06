@@ -1,0 +1,163 @@
+{
+	"name": "models/asset",
+	"parameters": [
+		{
+			"name": "mode",
+			"description": "<p>Pass an asset id to load a record, true to create a record, or false to validate a record configuration</p>",
+			"type": [
+				"number",
+				"boolean"
+			]
+		},
+		{
+			"name": "item",
+			"description": "<p>Item record the asset was generated from</p>",
+			"type": [
+				"number"
+			]
+		},
+		{
+			"name": "serial",
+			"description": "<p>Unique serial for the asset</p>",
+			"type": [
+				"string"
+			]
+		}
+	],
+	"members": [
+		{
+			"name": "uniqueFormula",
+			"description": "<p>Formula to check for duplicate assets</p>",
+			"type": [
+				"Array"
+			]
+		},
+		{
+			"name": "uniqueTemplate",
+			"description": "<p>Template to compare objects to search results</p>",
+			"type": [
+				"Array"
+			]
+		},
+		{
+			"name": "customers",
+			"description": "<p>Customers available to be serviced by the current Asset. The current record model and the selected Asset model is in scope.</p>",
+			"type": [
+				"Object"
+			],
+			"parameters": [
+				{
+					"name": "asset",
+					"description": "<p>Selected Asset model.</p>",
+					"type": [
+						"Asset"
+					]
+				}
+			]
+		},
+		{
+			"name": "map",
+			"description": "<p>Field map</p>",
+			"type": [
+				"object"
+			],
+			"properties": [
+				{
+					"name": "name",
+					"description": "<p>Name of the Asset</p>",
+					"type": [
+						"String"
+					]
+				},
+				{
+					"name": "autoname",
+					"description": "<p>Auto generated name for the Asset. When this has a value, the Name is populated from this attribute. Overwrite this to disable autonaming or change the naming formula.</p>",
+					"type": [
+						"String"
+					]
+				},
+				{
+					"name": "parent",
+					"description": "<p>Parent Asset this is a child of. Attributes defined in <em>inheritFields</em> will be sourced from the parent Asset.</p>",
+					"type": [
+						"Number"
+					]
+				},
+				{
+					"name": "item",
+					"description": "<p>Item the Asset is an instance of.</p>",
+					"type": [
+						"Number"
+					]
+				},
+				{
+					"name": "serial",
+					"description": "<p>Serial number of the Asset.</p>",
+					"type": [
+						"String"
+					]
+				},
+				{
+					"name": "customer",
+					"description": "<p>Customer owner of the Asset</p>",
+					"type": [
+						"Number"
+					]
+				},
+				{
+					"name": "customers",
+					"description": "<p>Customers that are valid to create records against. Overwrite this to refer to Asset fields.\nWhen <em>true</em> all customers are available. When <em>false</em> no customers can be selected. When an id or list or ids, these customers are used. Otherwise differ to customers object.</p>",
+					"type": [
+						"true",
+						"false",
+						"*"
+					]
+				},
+				{
+					"name": "addressbook",
+					"description": "<p>Customer address book associated with the Asset.</p>",
+					"type": [
+						"String"
+					]
+				},
+				{
+					"name": "addresstext",
+					"description": "<p>Address of the asset. This is sourced from <em>addressbook</em> when present.</p>",
+					"type": [
+						"String"
+					]
+				},
+				{
+					"name": "latitude",
+					"description": "<p>Latitude of the asset. This is calculated from the <em>addresstext</em> when present.</p>",
+					"type": [
+						"String"
+					]
+				},
+				{
+					"name": "longitude",
+					"description": "<p>Longitude of the asset. This is calculated from the <em>addresstext</em> when present.</p>",
+					"type": [
+						"String"
+					]
+				},
+				{
+					"name": "region",
+					"description": "<p>Region the Asset is in.</p>",
+					"type": [
+						"Number"
+					]
+				}
+			]
+		},
+		{
+			"name": "record",
+			"description": "<p>Record type</p>",
+			"type": [
+				"String"
+			]
+		}
+	],
+	"methods": [],
+	"id": "models-asset"
+}

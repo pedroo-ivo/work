@@ -1,0 +1,252 @@
+<?xml version="1.0"?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+	<head>
+		<style type="text/css">
+			* {
+				font-family: verdana,sans-serif,tahoma,helvetica,arial !important;
+			}
+
+			body {
+				margin: 25px;
+				padding: 0px;
+				font-size: 11px;
+				font-weight: normal;
+				color: #444444;
+			}
+
+			table {
+				width: 100%;
+				cellpadding: 3px 10px;
+			}
+
+			th {
+				font-weight: bold;
+			}
+
+			hr {
+				width: 100%;
+				background-color: #dcdcdc;
+				margin: 10px 0;
+			}
+
+			h1 {
+				vertical-align: text-top;
+			}
+
+			h2 {
+				width: 100%;
+				padding: 5px;
+				margin: 10px 0 5px 0;
+				font-size: 11px;
+				background-color: #444444;
+				color: #FFFFFF;
+			}
+
+			p {
+				width: 100%;
+			}
+
+			#logo {
+				width: 50%;
+				height: 50%;
+			}
+
+			#footer * {
+				font-size: 10px;
+			}
+
+			.signatures img {
+				width: 30%;
+				height: 30%;
+			}
+
+		</style>
+
+		<macrolist>
+			<macro id="header">
+				<table>
+					<tr>
+						<td width="65%" valign="bottom">
+							<h1>Service Report ${case.casenumber}</h1>
+						</td>
+						<td>
+							<#if subsidiary?has_content && subsidiary.logo?has_content>
+								<img id="logo" src="${subsidiary.logo@url?html}" alt="${companyInformation.companyname}" />
+							<#else>
+								<#if companyInformation.logoUrl?has_content>
+									<img id="logo" src="${companyInformation.logoUrl?html}" alt="${companyInformation.companyname}" />
+								</#if>
+							</#if>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							${companyInformation.url}<br/>
+							${companyInformation.email}<br/>
+							${companyInformation.phone}
+						</td>
+						<td>
+							${companyInformation.mainaddress_text}
+						</td>
+					</tr>
+				</table>
+				<hr/>
+			</macro>
+
+			<macro id="footer">
+				<hr/>
+				<table>
+					<tr>
+						<td>Customer Signature serves as an acknowledgement of receipt of service &amp; does not constitute an invoice. Additional ancillary costs related to performance of the stated work that are not available at the time of signature may be added at such time as they are finalised.</td>
+					</tr>
+					<tr>
+						<td align="center"><pagenumber/> of <totalpages/></td>
+					</tr>
+				</table>
+			</macro>
+
+		</macrolist>
+		
+		<title>Service_Report_${case.casenumber}.pdf</title>
+	</head>
+	<body size="A4" header="header" header-height="45mm" footer="footer" footer-height="17mm">
+
+		<h2>Details</h2>
+		<table>
+			<tr>
+				<th>Case</th>
+				<th>Contact</th>
+				<th>Order</th>
+			</tr>
+			<tr>
+				<td>
+					${case.casenumber}<br/>
+					${case.custevent_nx_case_asset}
+					${case.assigned}<br/>
+					${case.custevent_nx_start_date} ${case.custevent_nx_start_time} - ${case.custevent_nx_end_date} ${case.custevent_nx_end_time}<br/>
+					${case.custevent_nx_time_zone}
+				</td>
+				<td>
+					<#assign altname = "${case.custevent_nx_customer.firstname} ${case.custevent_nx_customer.lastname}"?trim>
+					<#if !altname?has_content><#assign altname = case.custevent_nx_customer.companyname></#if>
+					<#if case.contact?has_content>${case.contact.entityid}<#else>${altname}</#if><br/>
+				</td>
+				<td>
+					${case.custevent_nx_customer}<br/>
+					${case.custevent_nx_case_transaction}<br/>
+					${case.custevent_nx_case_purchaseorder}
+				</td>
+			</tr>
+		</table>
+
+		<#if case.custevent_nx_case_details?has_content>
+		<p>${case.custevent_nx_case_details}</p>
+		</#if>
+				
+
+		<!-- Process tasks on case -->
+		<#if tasks??>
+			<#list tasks as task>
+
+				<h2>
+					<div float="right"><p margin="0" align="right">${task.custevent_nx_start_date}</p></div>		
+					${task.custevent_nx_task_type} ${task.custevent_nx_task_number}
+				</h2>
+
+
+				<#if task.custevent_nx_actions_taken?has_content>
+				<p>${task.custevent_nx_actions_taken}</p>
+				</#if>
+
+
+				<!-- Find times on task -->
+				<#assign set = [] />
+				<#list times as time><#if task.internalid == time.custcol_nx_task.internalid><#assign set = set + [time.internalid] /></#if></#list>
+				<#if set?size != 0>
+				<table>
+					<tr>
+						<th width="65%">Time</th>
+						<th>Hours</th>
+						<th>Billable</th>
+					</tr>
+					<#list times as time>
+					<#if set?seq_contains(time.internalid)>
+					<tr>
+						<td>${time.item}</td>
+						<td>${time.durationdecimal}</td>
+						<td>${time.isbillable}</td>
+					</tr>
+					</#if>
+					</#list>
+				</table>
+				</#if>
+
+
+				<!-- Find sales on task -->
+				<#assign set = [] />
+				<#list salesorder as item><#if task.internalid == item.custcol_nx_task.internalid><#assign set = set + [item.internalid] /></#if></#list>
+				<#if set?size != 0>
+				<table>
+					<tr>
+						<th width="65%">Sales</th>
+						<th>Quantity</th>
+						<th>Billable</th>
+					</tr>
+					<#list salesorder as item>
+					<#if task.internalid == item.custcol_nx_task.internalid>
+					<tr>
+						<td>${item.item}</td>
+						<td>${item.quantity}</td>
+						<td><#if item.amount gt 0>Yes<#else>No</#if></td>
+					</tr>
+					</#if>
+					</#list>
+				</table>
+				</#if>
+
+
+				<!-- Find expenses on task -->
+				<#assign set = [] />
+				<#list expenses as expense><#if task.internalid == expense.custbody_nx_task.internalid><#assign set = set + [expense.internalid] /></#if></#list>
+				<#if set?size != 0>
+				<table>
+					<tr>
+						<th width="65%">Expenses</th>
+						<th>Amount</th>
+						<th>Billable</th>
+					</tr>
+					<#list expenses as expense>
+					<#if set?seq_contains(expense.internalid)>
+					<tr>
+						<td>${expense.formulatext}</td>
+						<td>${expense.amount}</td>
+						<td>${expense.billable}</td>
+					</tr>
+					</#if>
+					</#list>
+				</table>	
+				</#if>
+
+				<!-- Example of how layout signatures 
+				<h3>Signatures</h3>
+				<table class="signatures">
+					<tr>
+						<th width="50%">Employee</th>
+						<th>Customer</th>
+					</tr>
+					<tr>
+						<td>${task.assigned}</td>
+						<td>${task.supportcase.contact}</td>
+					</tr>
+					<tr>
+						<td>${task.custevent_nxc_employee_signature}</td>
+						<td>${task.custevent_nxc_customer_signature}</td>
+					</tr>
+				</table>
+				-->
+
+			</#list>
+		</#if>
+	</body>
+</pdf>

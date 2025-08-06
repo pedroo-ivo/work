@@ -1,0 +1,43 @@
+{
+	"name": "utilities/rule",
+	"description": "<p>Utility to finds the matching rules in a rule set</p>",
+	"parameters": [
+		{
+			"name": "rules",
+			"description": "<p>Rules to test against</p>",
+			"type": [
+				"Array.<Object>"
+			]
+		},
+		{
+			"name": "ignore",
+			"description": "<p>Rule attributes to ignore</p>",
+			"type": [
+				"Array"
+			]
+		},
+		{
+			"name": "attributes",
+			"description": "<p>Attributes to match on</p>",
+			"type": [
+				"Object"
+			]
+		}
+	],
+	"returns": [
+		{
+			"description": "<p>The matching rule</p>",
+			"type": [
+				"Object"
+			]
+		},
+		{
+			"description": "<p>If no matching rule found</p>",
+			"type": [
+				"null"
+			]
+		}
+	],
+	"methods": [],
+	"id": "utilities-rule"
+}

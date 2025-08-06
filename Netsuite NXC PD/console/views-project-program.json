@@ -1,0 +1,19 @@
+{
+	"name": "views/project/program",
+	"description": "<p>Project Program Component\nBuilds and manages sublist on the project to show programmed cases</p>",
+	"members": [
+		{
+			"name": "el",
+			"description": "<p>Form elements</p>"
+		},
+		{
+			"name": "hidden",
+			"description": "<p>This view is to be shown or hidden</p>",
+			"type": [
+				"Boolean"
+			]
+		}
+	],
+	"methods": [],
+	"id": "views-project-program"
+}

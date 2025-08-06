@@ -1,0 +1,29 @@
+{
+	"name": "views/employee/loginas",
+	"description": "<p>Employee Login As Button Component\nAdds a button to view mode of Mobile Employees to login as them in the browser.</p>",
+	"members": [
+		{
+			"name": "hidden",
+			"description": "<p>This view is to be shown or hidden</p>",
+			"type": [
+				"Boolean"
+			]
+		},
+		{
+			"name": "label",
+			"description": "<p>Button label</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "name",
+			"description": "<p>Button name</p>",
+			"type": [
+				"String"
+			]
+		}
+	],
+	"methods": [],
+	"id": "views-employee-loginas"
+}

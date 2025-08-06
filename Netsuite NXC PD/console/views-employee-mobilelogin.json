@@ -1,0 +1,43 @@
+{
+	"name": "views/employee/mobilelogin",
+	"description": "<p>Employee Mobile Login Button Component\nAdds a button to view mode of Mobile Employees to email them a link to the Mobile app.</p>",
+	"members": [
+		{
+			"name": "confirm",
+			"description": "<p>Confirm text before creating the invoice.</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "hidden",
+			"description": "<p>This view is to be shown or hidden</p>",
+			"type": [
+				"Boolean"
+			]
+		},
+		{
+			"name": "label",
+			"description": "<p>Button label</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "name",
+			"description": "<p>Button name</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "success",
+			"description": "<p>Alert text when the email is successfully sent.</p>",
+			"type": [
+				"String"
+			]
+		}
+	],
+	"methods": [],
+	"id": "views-employee-mobilelogin"
+}

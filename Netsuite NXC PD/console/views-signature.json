@@ -1,0 +1,22 @@
+{
+	"name": "views/signature",
+	"description": "<p>Signature Pad Component\nAdds signature pads to forms</p>",
+	"members": [
+		{
+			"name": "hidden",
+			"description": "<p>This view is to be shown or hidden</p>",
+			"type": [
+				"boolean"
+			]
+		},
+		{
+			"name": "pattern",
+			"description": "<p>Naming convention to identify rich text fields to be displayed as signature pads</p>",
+			"type": [
+				"String"
+			]
+		}
+	],
+	"methods": [],
+	"id": "views-signature"
+}

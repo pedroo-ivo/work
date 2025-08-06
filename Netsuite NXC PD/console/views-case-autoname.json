@@ -1,0 +1,15 @@
+{
+	"name": "views/case/autoname",
+	"description": "<p>Case Autoname Component\nEnable and disable name field when autonaming as you can't from forms.</p>",
+	"members": [
+		{
+			"name": "hidden",
+			"description": "<p>This view is to be shown or hidden</p>",
+			"type": [
+				"Boolean"
+			]
+		}
+	],
+	"methods": [],
+	"id": "views-case-autoname"
+}

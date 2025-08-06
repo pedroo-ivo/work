@@ -1,0 +1,84 @@
+{
+	"name": "utilities/form",
+	"description": "<p>Utility to generate a record form as json</p>",
+	"parameters": [
+		{
+			"name": "options.record",
+			"description": "<p>Record type</p>",
+			"type": [
+				"string"
+			]
+		},
+		{
+			"name": "options.order",
+			"description": "<p>Apply user event before load field ordering</p>",
+			"type": [
+				"boolean"
+			],
+			"optional": true,
+			"defaultvalue": true
+		},
+		{
+			"name": "options.options",
+			"description": "<p>Load select options</p>",
+			"type": [
+				"boolean"
+			],
+			"optional": true,
+			"defaultvalue": true
+		},
+		{
+			"name": "options.hidden",
+			"description": "<p>Include hidden fields</p>",
+			"type": [
+				"boolean"
+			],
+			"optional": true,
+			"defaultvalue": false
+		},
+		{
+			"name": "options.inline",
+			"description": "<p>Include inline fields</p>",
+			"type": [
+				"boolean"
+			],
+			"optional": true,
+			"defaultvalue": true
+		},
+		{
+			"name": "options.include",
+			"description": "<p>Only return these fields</p>",
+			"type": [
+				"Array.<string>"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.exclude",
+			"description": "<p>Return all fields except these</p>",
+			"type": [
+				"Array.<string>"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.cache",
+			"description": "<p>Store or retrieve cached form matching the defined options</p>",
+			"type": [
+				"Boolean"
+			],
+			"optional": true,
+			"defaultvalue": true
+		}
+	],
+	"returns": [
+		{
+			"description": "<p>Form</p>",
+			"type": [
+				"Object"
+			]
+		}
+	],
+	"methods": [],
+	"id": "utilities-form"
+}

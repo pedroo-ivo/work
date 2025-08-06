@@ -1,0 +1,31 @@
+{
+	"name": "utilities/collection",
+	"description": "<p>Utility to convert hash of objects to sorted array of objects with id</p>",
+	"parameters": [
+		{
+			"name": "data",
+			"description": "<p>Hash of objects to convert</p>",
+			"type": [
+				"Object"
+			]
+		},
+		{
+			"name": "data.*.index",
+			"description": "<p>Zero based index for the item in the collection</p>",
+			"type": [
+				"Number"
+			],
+			"optional": true
+		}
+	],
+	"returns": [
+		{
+			"description": "<p>Ordered collection of objects</p>",
+			"type": [
+				"Array.<Object>"
+			]
+		}
+	],
+	"methods": [],
+	"id": "utilities-collection"
+}

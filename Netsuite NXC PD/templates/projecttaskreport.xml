@@ -1,0 +1,253 @@
+<?xml version="1.0"?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+	<head>
+		<style type="text/css">
+			/* All working units are in pixels. 90px = 1 inch */
+			* 								{ font-family: verdana,sans-serif,tahoma,helvetica,arial !important; }
+			body 							{ margin: ${body.margin}px; padding: 0px; font-size: 11px; font-weight: normal; color: #444444; }
+			table 							{ width: 100%; cellpadding: 3px 10px; }
+			th 								{ font-weight: bold; }
+			hr 								{ width: 100%; background-color: #dcdcdc; margin: 10px 0; }
+			h1 								{ vertical-align: text-top; }
+			h2 								{ width: 100%; padding: 5px; margin: 10px 0 5px 0; font-size: 11px; background-color: #444444; border: none; color: #FFFFFF; }
+			#footer * 						{ font-size: 10px; }
+			.signatures img 				{ width: 30%; height: 30%; }
+
+			/* Resize the logo to fit the header assuming 60px of content */
+			<#assign logoscale = (header.height - 60)/logo.height*100 >
+			.logo 							{ width: ${logoscale}%; height: ${logoscale}%; }
+			
+			/* Image grid assuming and attached images are max 1080px with unknown aspect ratio */
+			<#assign cellwidth = (body.width - (body.margin * 2) - (body.gutter * (body.columns - 1)))/body.columns>
+			.images 						{ cellpadding: 0; cellmargin: 5px 0 5px ${body.gutter}px; }
+			.images td 						{ width: ${cellwidth}px; align: center; }
+			.images td.col-1 				{ margin-left: 0; }
+			.images .caption-row td 		{}
+			.images .image-row td 			{ vertical-align: middle; overflow: hidden; }
+			.images .image-row img 			{ dpi: ${body.imagesize/(cellwidth/90)}; }
+		</style>
+
+		<macrolist>
+			<macro id="header">
+				<table>
+					<tr>
+						<td width="65%" valign="bottom">
+							<h1>Service Report ${projecttask.internalid}</h1>
+						</td>
+						<td align="right">
+							<#if subsidiary?? && subsidiary.logo?has_content>
+								<img class="logo" src="${subsidiary.logo?html}" />
+							<#elseif companyInformation.logoUrl?has_content>
+								<img class="logo" src="${companyinformation.logoUrl?html}" />
+							</#if>
+						</td>
+					</tr>
+					<tr>
+						<#if subsidiary??>
+							<td>
+								<!-- subsidiary.url is a link to the subsidiary record, use subsidiary._url to access the website field instead -->
+								${subsidiary._url?html}<br/>
+								${subsidiary.email}<br/>
+								${subsidiary.phone}
+							</td>
+							<td>
+								<p align="right">${subsidiary.mainaddress_text}</p>
+							</td>
+						<#else>
+							<td>
+								${companyinformation.url}<br/>
+								${companyinformation.email}<br/>
+								${companyinformation.phone}
+							</td>
+							<td>
+								${companyinformation.mainaddress_text}
+							</td>
+						</#if>
+					</tr>
+				</table>
+				<hr/>
+			</macro>
+
+			<macro id="footer">
+				<hr/>
+				<table>
+					<tr>
+						<td>Customer Signature serves as an acknowledgement of receipt of service &amp; does not constitute an invoice. Additional ancillary costs related to performance of the stated work that are not available at the time of signature may be added at such time as they are finalised.</td>
+					</tr>
+					<tr>
+						<td align="center"><pagenumber/> of <totalpages/></td>
+					</tr>
+				</table>
+			</macro>
+
+		</macrolist>
+		
+		<title>Service_Report_${projecttask.internalid}.pdf</title>
+	</head>
+	<body width="${body.width}px" height="${body.height}px" header="header" header-height="${header.height}px" footer="footer" footer-height="${footer.height}px">
+		
+		<h2>Details</h2>
+		<table>
+			<tr>
+				<th>Project Task</th>
+				<th>Contact</th>
+				<th>Project</th>
+				<th>Customer</th>
+			</tr>
+			<tr>
+				<td>
+					<#if projecttask.assignee??>
+						<#list projecttask.assignee as assignee>
+						${assignee.resource}<br/>
+						</#list>
+					</#if>
+					${projecttask.startdate} - ${projecttask.enddate}
+					<#if projecttask.timezone?has_content><br/>${projecttask.timezone}</#if>
+				</td>
+				<td>
+					<#if project.contact?has_content>
+						<#assign trimmedContact = project.contact?keep_after_last(" : ")>
+						<#if trimmedContact?has_content>${trimmedContact}<#else>${project.contact}</#if>
+					<#else>${projecttask.custevent_nx_customer.companyname}</#if><br/>
+					${projecttask.custevent_nx_address}
+				</td>
+				<td>
+					${project.companyname}<br/>
+					${project.comments}<br/>
+					${projecttask.custevent_nx_task_asset}
+				</td>
+				<td>
+					${projecttask.custevent_nx_customer}
+				</td>
+			</tr>
+		</table>
+
+
+		<#if projecttask.custevent_nx_actions_taken?has_content>
+		<h2>Actions Taken</h2>
+		<p>${projecttask.custevent_nx_actions_taken}</p>
+		</#if>
+
+	
+		<#if time??>
+		<h2>Time</h2>
+		<table>
+			<tr>
+				<th>Employee</th>
+				<th>Date</th>
+				<th>Description</th>
+				<th>Hours</th>
+				<th>Billable</th>
+			</tr>
+			<#list time as part>
+			<tr>
+				<td>${part.employee}</td>
+				<td>${part.date}</td>
+				<td>${part.item}</td>
+				<td>${part.durationdecimal}</td>
+				<td>${part.isbillable}</td>
+			</tr>
+			</#list>
+		</table>
+		</#if>
+		
+		
+		<#if salesorder??>
+		<h2>Sales</h2>
+		<table>
+			<tr>
+				<th width="65%">Description</th>
+				<th>Quantity</th>
+				<th>Billable</th>
+			</tr>
+			<#list salesorder as item>
+			<tr>
+				<td>${item.item}</td>
+				<td>${item.quantity}</td>
+				<td><#if item.amount gt 0>Yes<#else>No</#if></td>
+			</tr>
+			</#list>
+		</table>
+		</#if>
+		
+		
+		<#if expensereport??>
+		<h2>Expenses</h2>
+		<table>
+			<tr>
+				<th>Employee</th>
+				<th>Date</th>
+				<th>Description</th>
+				<th>Amount</th>
+				<th>Billable</th>
+			</tr>
+			<#list expensereport as expense>
+			<tr>
+				<td>${expense.employee.entityid}</td>
+				<td>${expense.expensedate}</td>
+				<td>${expense.formulatext}</td>
+				<td>${expense.amount}</td>
+				<td>${expense.billable}</td>
+			</tr>
+			</#list>
+		</table>	
+		</#if>
+		
+		
+		<#if image?size != 0>
+		<h2>Images</h2>
+		<table class="images">
+			
+			<!-- Column counter -->
+			<#assign column = 0 >
+			<#list image as img>
+				<#if column == body.columns><#assign column = 1>
+				<#else><#assign column += 1></#if>
+
+				<!-- Start new pair of rows -->
+				<#if column == 1>
+					<#assign row1><tr class="image-row"></#assign>
+					<#assign row2><tr class="caption-row"></#assign>
+				</#if>
+				
+				<!-- Add image to row 1 and description to row 2 -->
+				<#assign row1>${row1}<td class="col-${column}"><img src="${img.url?html}" /></td></#assign>
+				<#assign row2>${row2}<td class="col-${column}">${img.description?html}</td></#assign>
+
+				<!-- Print and close pair of rows -->
+				<#if column == body.columns>
+					${row1}</tr>
+					${row2}</tr>
+				</#if>
+			</#list>
+			
+			<!-- Print empty cell spanning remaining columns and close rows -->
+			<#if column != body.columns>
+				${row1}<td colspan="${body.columns - column}"></td></tr>
+				${row2}<td colspan="${body.columns - column}"></td></tr>
+			</#if>
+		</table>
+		</#if>
+		
+		
+		<!-- Example of how layout signatures 
+		<h2>Signatures</h2>
+		<table class="signatures">
+			<tr>
+				<th width="50%">Employee</th>
+				<th>Customer</th>
+			</tr>
+			<tr>
+				<td>${projecttask.assigned}</td>
+				<td>${projecttask.supportcase.contact}</td>
+			</tr>
+			<tr>
+				<td>${projecttask.custevent_nxc_employee_signature}</td>
+				<td>${projecttask.custevent_nxc_customer_signature}</td>
+			</tr>
+		</table>
+		-->
+
+	</body>
+</pdf>

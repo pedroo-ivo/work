@@ -1,0 +1,2754 @@
+{
+	"dependencies": {
+		"searches": {
+			"Summary Project P&L Sublist [DO NOT DELETE]": "",
+			"Detail Project P&L Sublist [DO NOT DELETE]": ""
+		},
+		"workflows": {
+			"Case": "NXC Case VU and NXC Case ALL",
+			"salesorder": "NXC SO VU WF",
+			"nxasset": "NXC Asset Form Workflow"
+		},
+		"scripts": {
+			"asset": "Set Asset on Sales Order From NX Asset",
+			"salesorder": "Set SO on Case from SO"
+		}
+	},
+	"accounting": {
+		"debit_account": 257,
+		"credit_account": 282
+	},
+	"views/project/profitability": {
+		"hidden": false
+	},
+	"views/case/projects": {
+		"options": {
+			"active": {
+				"map": {
+					"selected": "formulatext:case when {custentity_nx_project_type.id} in (3) then 'A' when {custentity_nx_project_type.id} in (5) then 'B' else '' end"
+				}
+			},
+			"types": {
+				"filters": [
+					["isinactive","is","F"],"and",
+					["internalid","anyof",
+						["2"]
+					]
+				],
+				"map": {
+					"selected": "formulatext:case when {internalid} = 2 then 'E' else '' end"
+				}
+			}
+		}
+	},
+	"models/asset": {
+		"uniqueFormula": "formulatext:case when {custrecord_na_asset_type.id} = '1' then {custrecord_na_description} else {custrecord_na_crew_name} end",
+		"uniqueTemplate": "${ (custrecord_na_asset_type == 1 ? assetdescription : custrecord_na_crew_name) ||'' }",
+		"prototype": {
+			"map": {
+				"autoname": "formulatext:case when {custrecord_na_asset_type.id} = '1' then {custrecord_na_description} else {custrecord_na_crew_name} end",
+				"assetdescription": "custrecord_na_description",
+				"custrecord_na_machine_type": "custrecord_na_machine_type",
+				"custrecord_na_asset_type": "custrecord_na_asset_type",
+				"custrecord_na_crew_name": "custrecord_na_crew_name"
+			}
+		}
+	},
+	"program": {
+		"projectInactive": [1,3],
+		"projectmap": {
+			"caseassignee": "custentity_nxc_case_assignee",
+			"woh": "cseg_wip_project"
+		},
+		"projectrules": [{
+				"//": "PM 7 Weekly",
+				"project": [1],
+				"unit": "day",
+				"interval": 49,
+				"case": {
+					"type": 1,
+					"assigned": "${project.caseassignee}",
+					"custeventcustevent_dce_department": "${project.custentity_f5_cust_department}"
+				}
+			},{
+				"//": "Commissioning",
+				"project": [5],
+				"total": 1,
+				"case": {
+					"type": 3,
+					"woh": "${project.woh}",
+					"custeventcustevent_dce_department": "${project.custentity_f5_cust_department}"
+				}
+			}],
+		"caserules": [{
+				"project": 1,
+				"case": [1],
+				"task": {
+					"type": 2,
+					"cseg_dce_sales_regi": "${supportcase.cseg_dce_sales_regi}",
+					"custeventcustevent_dce_department": "${supportcase.custeventcustevent_dce_department}"
+				}
+			},{
+				"project": 5,
+				"case": [3],
+				"total": 1,
+				"task": {
+					"type": 2,
+					"cseg_dce_sales_regi": "${supportcase.cseg_dce_sales_regi}",
+					"custeventcustevent_dce_department": "${supportcase.custeventcustevent_dce_department}"
+				}
+			}]
+	},
+	"models/project": {
+		"prototype": {
+			"defaults": {
+				"customform": 115
+			}
+		}
+	},
+	"models/case": {
+		"prototype": {
+			"map": {
+				"woh": "cseg_wip_project"
+			},
+			"defaults": {
+				"customform": 152
+			}
+		}
+	},
+	"models/task": {
+		"prototype": {
+			"defaults": {
+				"sendemail": false,
+				"type": 2,
+				"customform": 117,
+				"start": 32400000,
+				"end": 61200000
+			},
+			"map": {
+				"autoname": "formulatext:substr({custevent_nx_task_type}||' '||{custevent_nx_task_number} || ' ' || {custevent_nx_task_asset}, 1, 80)",
+				"autoclose": false,
+				"travelnonbill": "custevent_nx_task_asset.custrecord_na_travel_nonbillable",
+				"salesreg": "cseg_dce_sales_regi",
+				"department": "custeventcustevent_dce_department"
+			}
+		}
+	},
+	"models/expensereport": {
+		"prototype": {
+			"map": {
+				"woh": "cseg_wip_project"
+			},
+			"defaults": {
+				"customform": 174
+			}
+		}
+	},
+	"models/salesorder": {
+		"prototype": {
+			"map": {
+				"woh": "cseg_wip_project"
+			},
+			"defaults": {
+				"customform": 242
+			}
+		}
+	},
+	"models/quote": {
+		"prototype": {
+			"defaults": {
+				"customform": 170
+			}
+		}
+	},
+	"models/invoice": {
+		"prototype": {
+			"defaults": {
+				"customform": 249
+			}
+		}
+	},
+	"models/itemfulfillment": {
+		"prototype": {
+			"defaults": {
+				"customform": 163
+			}
+		}
+	},
+	"billing": {
+		"time": {
+			"item": {
+				"map": "formulatext:case when ({internalid} in (2159) and '{task.travelnonbill}' = 'true') then 'F' when {task.billing} in (3,4,7,8) then 'F' else 'T' end"
+			}
+		},
+		"task": [{
+				"//": "Any Rework Case",
+				"project": true,
+				"case": 4,
+				"task": true,
+				"billing": 8
+			},{
+				"//": "PM Weekly, Quoted, Billable T&M",
+				"project": [1,2,4],
+				"case": true,
+				"task": true,
+				"billing": 1
+			},{
+				"//": "Warranty []",
+				"project": [3],
+				"case": true,
+				"task": true,
+				"billing": 8
+			},{
+				"//": "Commissioning[]",
+				"project": [5],
+				"case": true,
+				"task": true,
+				"billing": 8
+			},{
+				"project": [true,false],
+				"case": [true,false],
+				"task": true,
+				"billing": 8
+			}]
+	},
+	"console": true,
+	"routes/mobile": {
+		"inject": "<script>function qtyAvailable(item,qty, max, consumables){ console.log('item',item); var conmatch = consumables.filter(o=>{ return (o.item.id == item.id && o.item.optgroup == 'Consumables') }); return (!conmatch.length && item && (max - qty < 0)) ? false : true; }</script>",
+		"addable": true,
+		"event": {
+			"article": {
+				"projecttask": {
+					"resources": [{
+							"//": "Tasks without any Tabs",
+							"project": [true,false],
+							"case": [true,false],
+							"task": [3,4,5,7,8,9,11,12],
+							"resources": []
+						}]
+				},
+				"task": {
+					"filters": [
+						[
+							["assigned","anyof","${user.internalid}"],"or",
+							["custevent_nx_task_team","anyof","${user.internalid}"]
+						],"and",
+						["custevent_nx_task_type","noneof","@NONE@"],"and",
+						["startdate","onorafter","twoDaysAgo"],"and",
+						["startdate","onorbefore","tenDaysFromNow"]
+					],
+					"map": {
+						"label": "formulatext: CASE WHEN {custevent_nx_task_asset.parent.id} = '504' THEN 'M6' WHEN {custevent_nx_task_asset.id} = '504' THEN 'M6' WHEN {custevent_nx_task_asset.id} = '501' THEN 'M1'  WHEN {custevent_nx_task_asset.parent.id} = '501' THEN 'M1' WHEN {custevent_nx_task_asset.id} = '502' THEN 'M3'  WHEN {custevent_nx_task_asset.parent.id} = '502' THEN 'M3' WHEN {custevent_nx_task_asset.id} = '506' THEN 'NMH'  WHEN {custevent_nx_task_asset.parent.id} = '506' THEN 'NMH' WHEN {custevent_nx_task_asset.id} = '617' THEN 'KDH'  WHEN {custevent_nx_task_asset.parent.id} = '617' THEN 'KDH' WHEN {custevent_nx_task_asset.id} = '503' THEN 'M5'  WHEN {custevent_nx_task_asset.parent.id} = '503' THEN 'M5' WHEN {custevent_nx_task_asset.id} IS NOT NULL THEN NVL2({custevent_nx_customer},{custevent_nx_customer}, {custevent_nx_task_type}) WHEN {custevent_nx_task_asset.parent.id} IS NOT NULL THEN NVL2({custevent_nx_customer},{custevent_nx_customer},{custevent_nx_task_type}) ELSE {custevent_nx_task_type} END||NVL2({custevent_nx_task_asset},' : '||regexp_replace({custevent_nx_task_asset}, '^.* : ', ''), '')",
+						"sublabel": "formulatext: nvl2({case.casenumber}, {case.casenumber}|| ' : ', '')||nvl(SUBSTR({case.custevent_nx_case_details}, 1, 80),'No Case Details')||' : '||nvl(SUBSTR({message}, 1, 200),'No Task Details')",
+						"body": "formulatext:nvl2({case.casenumber}, '<p>Case Number : '||{case.casenumber}||'</p><p>Case Type : '||{case.custevent_nx_case_type}||'</p>', '')||nvl2({case.custevent_nx_case_details}, '<p>Case Details : '||{case.custevent_nx_case_details}, '<p>Case Details : No Case Details')||nvl2({case.custevent_nxc_winch_service_type}, '<p>Winch Service : '||{case.custevent_nxc_winch_service_type},'')|| nvl2({case.custevent_nxc_carriage_service_type}, '<p>Carriage Service : '||{case.custevent_nxc_carriage_service_type},'')||nvl2({case.custevent_nxc_service_type}, '<p>General Service : '||{case.custevent_nxc_service_type},'')|| nvl2({custevent_nx_task_number}, '<p>Task Number : '||{custevent_nx_task_number}||'</p><p>Task Type : '||{custevent_nx_task_type}||'</p>', '')||nvl2({message}, '<p>Task Details : '||{message},'<p>Task Details : No Task Details')",
+						"assetparent": "formulatext: nvl({custevent_nx_task_asset.parent.id},0)",
+						"salesorder": "case.custevent_nx_case_transaction|",
+						"assettype": "custevent_nx_task_asset.custrecord_na_asset_type|",
+						"assetservicetype": {
+							"id": "=custevent_nx_task_asset.custrecord_na_service_type|",
+							"label": "custevent_nx_task_asset.custrecord_na_service_type#|"
+						},
+						"assetwinchservicetype": {
+							"id": "=custevent_nx_task_asset.custrecord_na_w_service_type|",
+							"label": "custevent_nx_task_asset.custrecord_na_w_service_type#|"
+						},
+						"assetmachinetype": {
+							"id": "=custevent_nx_task_asset.custrecord_na_machine_type|",
+							"label": "custevent_nx_task_asset.custrecord_na_machine_type#|"
+						},
+						"machinetype": "custevent_nx_task_asset.custrecord_na_machine_type|",
+						"currentmachinehour": "custevent_nx_task_asset.custrecord_na_num_hours|",
+						"wipproject": "job.cseg_wip_project|",
+						"salesreg": "case.cseg_dce_sales_regi|",
+						"department": "case.custeventcustevent_dce_department|",
+						"caseservicetype": {
+							"id": "=case.custevent_nxc_service_type||",
+							"label": "case.custevent_nxc_service_type|#|"
+						},
+						"casewinchservicetype": {
+							"id": "=case.custevent_nxc_winch_service_type||",
+							"label": "case.custevent_nxc_winch_service_type|#|"
+						},
+						"casecarriageservicetype": {
+							"id": "=case.custevent_nxc_carriage_service_type||",
+							"label": "case.custevent_nxc_carriage_service_type|#|"
+						},
+						"caseso": "=case.custevent_nx_case_transaction",
+						"caseponumber": "case.custevent_nx_case_purchaseorder|"
+					},
+					"resources": [{
+							"//": "Project: Commissioning, Case: Commissioning, Task Type = Site Visit Lead",
+							"project": [5],
+							"case": [3,4],
+							"task": [2],
+							"resources": ["consumables","salesorder","jsa","hazards","times","jobcarddetails","machineasset","newdetails","machinehour","contact","expenses","servicehistory","actions","files"]
+						},{
+							"//": "Project: Commissioning, Case: Commissioning, Task Type = Site Visit",
+							"project": [5],
+							"case": [3,4],
+							"task": [1],
+							"resources": ["times","machineasset","machinehour","contact","expenses","servicehistory","actions","files"]
+						},{
+							"//": "PM 7 weekly, Maintenance Case, Task Type = Site Visit Team Lead",
+							"project": [1],
+							"case": [1,4],
+							"task": [2],
+							"assettype": 2,
+							"resources": {
+								"array": true,
+								"parent": ["consumables","salesorder","jsa","hazards","asset","newdetails"],
+								"child": {
+									"record": "customrecord_nx_asset",
+									"filters": [
+										["parent","anyof","${event.asset}"],"and",
+										["custrecord_na_machine_type","noneof","2"]
+									],
+									"map": [{
+											"id": "formulatext:'machineasset-'||{internalid}",
+											"label": "formulatext:{custrecord_na_machine_type}||' # ' || replace({name}, {parent}||' : ')",
+											"asset": "internalid",
+											"assettype": "custrecord_na_asset_type",
+											"assetservicetype": "custrecord_na_service_type"
+										},{
+											"id": "formulatext:'machinehour-'||{internalid}",
+											"parent": "formulatext:'machineasset-'||{internalid}",
+											"asset": "internalid"
+										},{
+											"id": "formulatext:'times-'||{internalid}",
+											"parent": "formulatext:'machineasset-'||{internalid}",
+											"asset": "internalid"
+										},{
+											"id": "formulatext:'servicerecord-'||{internalid}",
+											"parent": "formulatext:'machineasset-'||{internalid}",
+											"asset": "internalid",
+											"assetservicetype": {
+												"id": "=custrecord_na_service_type",
+												"label": "custrecord_na_service_type#|"
+											},
+											"assetmachinetype": {
+												"id": "=custrecord_na_machine_type",
+												"label": "custrecord_na_machine_type#|"
+											}
+										},{
+											"id": "formulatext:'winchservicerecord-'||{internalid}",
+											"parent": "formulatext:'machineasset-'||{internalid}",
+											"asset": "internalid",
+											"assetwinchservicetype": {
+												"id": "=custrecord_na_w_service_type",
+												"label": "custrecord_na_w_service_type#|"
+											},
+											"assetmachinetype": {
+												"id": "=custrecord_na_machine_type",
+												"label": "custrecord_na_machine_type#|"
+											}
+										},{
+											"id": "formulatext:'servicehistory-'||{internalid}",
+											"parent": "formulatext:'machineasset-'||{internalid}",
+											"asset": "internalid"
+										}]
+								},
+								"parent2": ["contact","expenses","files"]
+							}
+						},{
+							"//": "PM 7 weekly, Maintenance Case, Task Type = Site Visit",
+							"project": [1],
+							"case": [1,4],
+							"task": [1],
+							"assettype": 2,
+							"resources": {
+								"array": true,
+								"parent": ["asset"],
+								"child": {
+									"record": "customrecord_nx_asset",
+									"filters": [
+										["parent","anyof","${event.asset}"],"and",
+										["custrecord_na_machine_type","noneof","2"]
+									],
+									"map": [{
+											"id": "formulatext:'machineasset-'||{internalid}",
+											"label": "formulatext:{custrecord_na_machine_type}||' # ' || replace({name}, {parent}||' : ')",
+											"asset": "internalid",
+											"assettype": "custrecord_na_asset_type",
+											"assetservicetype": "custrecord_na_service_type"
+										},{
+											"id": "formulatext:'machinehour-'||{internalid}",
+											"parent": "formulatext:'machineasset-'||{internalid}",
+											"asset": "internalid"
+										},{
+											"id": "formulatext:'times-'||{internalid}",
+											"parent": "formulatext:'machineasset-'||{internalid}",
+											"asset": "internalid"
+										},{
+											"id": "formulatext:'servicehistory-'||{internalid}",
+											"parent": "formulatext:'machineasset-'||{internalid}",
+											"asset": "internalid"
+										}]
+								},
+								"parent2": ["contact","expenses","files"]
+							}
+						},{
+							"//": "Billable/Quoted, Case: Maintenance, Task Type = Site Visit Lead, Winch Asset",
+							"project": [2,5],
+							"case": [1,4],
+							"task": [2],
+							"machinetype": 1,
+							"resources": ["consumables","salesorder","jsa","hazards","machineasset","contact","jobcarddetails","times","newdetails","machinehour","servicerecord","winchservicerecord","expenses","servicehistory","files"]
+						},{
+							"//": "Billable/Quoted, Maintenance Case, Task Type = Site Visit Lead, Grapple Carriage Asset",
+							"project": [2,5],
+							"case": [1,4],
+							"task": [2],
+							"machinetype": 2,
+							"resources": ["consumables","salesorder","jsa","hazards","times","jobcarddetails","machineasset","newdetails","machinehour","carriageservicerecord","contact","expenses","servicehistory","files"]
+						},{
+							"//": "Project: Billable/Quoted, Case: Maintenance, Task Type = Site Visit Lead, All Other Assets",
+							"project": [2,5],
+							"case": [1,4],
+							"task": [2],
+							"resources": ["consumables","salesorder","jsa","hazards","times","jobcarddetails","machineasset","newdetails","machinehour","servicerecord","contact","expenses","servicehistory","files"]
+						},{
+							"//": "Warranty, Repair/Breakfix Case, Task Type = Site Visit Lead",
+							"project": [2,3],
+							"case": [2,4],
+							"task": [2],
+							"resources": ["consumables","salesorder","jsa","hazards","times","jobcarddetails","machineasset","newdetails","machinehour","contact","expenses","servicehistory","actions","files"]
+						},{
+							"//": "Project: Billable/Warranty, Case: Repair/Breakfix Maintenance, Task Type = Site Visit",
+							"project": [2,3],
+							"case": [1,2,4],
+							"task": [1],
+							"resources": ["times","machineasset","machinehour","contact","expenses","servicehistory","actions","files"]
+						},{
+							"//": "Task Type = Workshop",
+							"project": true,
+							"case": true,
+							"task": [6],
+							"resources": ["consumables","salesorder","jsa","hazards","times","jobcarddetails","machineasset","newdetails","machinehour","contact","expenses","servicehistory","actions","files"]
+						},{
+							"//": "case: maintenance/rework, task:workshop-non-jsa",
+							"project": true,
+							"case": [1,4],
+							"task": [13],
+							"resources": ["consumables","salesorder","times","jobcarddetails","machineasset","newdetails","machinehour","servicerecord","carriageservicerecord","winchservicerecord","contact","expenses","servicehistory","actions","files"]
+						},{
+							"//": "Electricial/Workshop-nonjsa",
+							"project": true,
+							"case": true,
+							"task": [10,13],
+							"resources": ["consumables","salesorder","times","jobcarddetails","machineasset","newdetails","machinehour","contact","expenses","servicehistory","actions","files"]
+						},{
+							"//": "Tasks without any Tabs",
+							"project": [true,false],
+							"case": [true,false],
+							"task": [true],
+							"resources": []
+						}]
+				}
+			}
+		},
+		"inventory": {
+			"element": {
+				"consumable": {
+					"options": {
+						"//": "elements outside of item are for consumables, elements inside item are for sales order",
+						"inventorylocation": {
+							"map": {
+								"label": "formulatext:{itemid} ||' - '||nvl({salesdescription}, {name}) || ' x ' ||{locationquantityavailable}",
+								"item": {
+									"id": "internalid",
+									"label": "formulatext:{itemid} ||' - '||nvl({salesdescription}, {name}) || ' x ' ||{locationquantityavailable}",
+									"optgroup": "formulatext:'Non-Serialised Items'"
+								}
+							}
+						},
+						"inventorynumber": {
+							"map": {
+								"label": "formulatext:{inventorynumber.quantityavailable}||'x '||{itemid}||' '||NVL({salesdescription}, {name})||(case when {isserialitem} = 'T' then ' : S/N ' else '' end)||(case when {islotitem} = 'T' then ' : LOT ' else '' end)||{inventorynumber.inventorynumber}",
+								"item": {
+									"id": "internalid",
+									"label": "formulatext:{inventorynumber.quantityavailable}||'x '||{itemid}||' '||NVL({salesdescription}, {name})||(case when {isserialitem} = 'T' then ' : S/N ' else '' end)||(case when {islotitem} = 'T' then ' : LOT ' else '' end)||{inventorynumber.inventorynumber}",
+									"optgroup": "formulatext:'Serialised Items'"
+								}
+							}
+						},
+						"inventorynumberbinonhand": {
+							"map": {
+								"label": "formulatext:{itemid} || NVL2({salesdescription},' - ' || {salesdescription},'') || NVL2({vendorname},' - ' || {vendorname},'') ||' : BIN '||{binonhand.binnumber}",
+								"item": {
+									"id": "internalid",
+									"label": "formulatext:{itemid}||' '||NVL({salesdescription}, {name})"
+								}
+							}
+						},
+						"binonhand": {
+							"map": {
+								"label": "formulatext:{itemid} || NVL2({salesdescription},' - ' || {salesdescription},'') || NVL2({vendorname},' - ' || {vendorname},'') || ' x ' || {binonhand.quantityavailable}",
+								"item": {
+									"id": "internalid",
+									"label": "formulatext:{itemid}||' '||NVL({salesdescription}, {name})"
+								}
+							}
+						},
+						"noninventoryitems": {
+							"record": "item",
+							"filters": [
+								["isinactive","is","F"],"and",
+								["type","anyof","NonInvtPart"],"and",
+								["custitem_nx_show_on_mobile","is","T"]
+							],
+							"map": {
+								"id": "internalid",
+								"label": "formulatext:{itemid} ||' - '||nvl({salesdescription}, {name})",
+								"item": {
+									"id": "internalid",
+									"label": "formulatext:{itemid} ||' - '||nvl({salesdescription}, {name})",
+									"optgroup": "formulatext:'Consumables'"
+								},
+								"optgroup": "formulatext:'Consumables'",
+								"location": {
+									"id": 17,
+									"label": "location#"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"consumables": {
+			"label": "Parts",
+			"enable": "commenced",
+			"element": {
+				"quantityavailable": {
+					"type": "text",
+					"label": "Quantity Available",
+					"readonly": true,
+					"value": "var opt = (item.value && location.value) ? unique(consumable.options.filter(o=>{ return (o.item.id == item.value.id) && o.location && (o.location.id == location.value.id) }).filter(o=>{ return o.bin ? (o.bin.id == (bin.value && bin.value.id)) : true }).filter(o=>{ return o.lot ? (o.lot.id == (lot.value && lot.value.id)) : true }).filter(o=>{ return o.serial ? (o.serial.id == (serial.value && serial.value[0] && serial.value[0].id)) : true }))[0] : null; return opt ? opt.available : 0"
+				}
+			},
+			"article": {
+				"map": {
+					"item": {
+						"label": "formulatext:{custrecord_nx_consitem.itemid} || ' : ' || NVL({custrecord_nx_consitem.salesdescription}, {custrecord_nx_consitem.name})"
+					}
+				}
+			}
+		},
+		"expenses": {
+			"enable": "commenced",
+			"element": {
+				"amount": {
+					"class": "el-3 el-left"
+				},
+				"departmentcol": {
+					"type": "hidden",
+					"value": "${event.department}",
+					"parent": "expenses"
+				}
+			},
+			"article": {
+				"map": {
+					"expenses": [{
+							"line": "line|expense.line",
+							"entity": "customer.internalid|expense.customer",
+							"memo": "formulatext:REPLACE({memo}, {expensecategory}||': ')|expense.memo",
+							"amount": "amount|expense.amount",
+							"category": {
+								"id": "=expensecategory|expense.category",
+								"label": "#expensecategory|"
+							},
+							"receipt": {
+								"id": "=lineFile.internalid|expense.expmediaitem",
+								"url": "formulatext:nvl2({lineFile.internalid},'${ url }file/'||{lineFile.internalid.id}||'&key=${ user.key }', '')"
+							},
+							"date": "expensedate|expense.expensedate",
+							"asset": "custcol_nx_asset|expense.custcol_nx_asset",
+							"crmtask": "custcol_nx_task|expense.custcol_nx_task",
+							"projecttaskcol": "custcol_nx_projecttask|expense.custcol_nx_projecttask",
+							"departmentcol": "department|expense.department"
+						}]
+				},
+				"defaults": {
+					"cseg_wip_project": "${event.wipproject}",
+					"cseg_dce_sales_regi": "${event.salesreg}",
+					"department": "${event.department}"
+				}
+			}
+		},
+		"servicehistory": {
+			"label": "Service History",
+			"icon": "bookmark",
+			"hidden": "${ !options.asset && !event.asset }",
+			"remote": true,
+			"readonly": true,
+			"article": {
+				"generalservice": {
+					"record": "customrecord_nxc_servicerecord",
+					"filters": [
+						["custrecord_sr_asset","anyof","${ options.asset || event.asset }"]
+					],
+					"map": {
+						"id": "*custrecord_sr_case",
+						"asset": "custrecord_sr_asset",
+						"servicedocument": {
+							"id": "=custrecord_sr_doc",
+							"url": "formulatext:'${url}file/'||{custrecord_sr_doc.id}||'&key=${user.key}'"
+						},
+						"number": "custrecord_sr_case.number",
+						"servicerecord": [{
+								"custrecord_sr_servicetype": "#custrecord_sr_servicetype",
+								"custrecord_sr_machine_type": "custrecord_sr_machine_type",
+								"item1": "custrecord_sr_250_drain_fuel",
+								"item2": "custrecord_sr_250_clean_fuel_tank",
+								"item3": "custrecord_sr_250_clean_fuel_suction",
+								"item4": "custrecord_sr_250_clean_air_cleaner",
+								"item5": "custrecord_sr_250_clean_air_inlet_screen",
+								"item6": "custrecord_sr_250_clean_cab_filter",
+								"item7": "custrecord_sr_250_check_airintake",
+								"item8": "custrecord_sr_250_check_cracks",
+								"item9": "custrecord_sr_250_check_attachment",
+								"item10": "custrecord_sr_250_check_pin_bushwear",
+								"item11": "custrecord_sr_250_check_hosing_wiring",
+								"item12": "custrecord_sr_250_check_belt_condition",
+								"item13": "custrecord_sr_250_check_extinguisher",
+								"item14": "custrecord_sr_250_check_dash_instruments",
+								"item15": "custrecord_sr_250_check_seat_belt",
+								"item16": "custrecord_sr_250_check_latches",
+								"item17": "custrecord_sr_250_check_lights",
+								"item18": "custrecord_sr_250_check_machine_ops",
+								"item19": "custrecord_sr_250_check_surge_tank",
+								"item20": "custrecord_sr_250_check_pumpoil_level",
+								"item21": "custrecord_sr_250_check_hydraulic_oil",
+								"item22": "custrecord_sr_250_check_oil_processing",
+								"item23": "custrecord_sr_250_change_oil_felling",
+								"item24": "custrecord_sr_250_change_engine_oil",
+								"item25": "custrecord_sr_250_replace_oil_filter",
+								"item26": "custrecord_sr_250_replace_fuel_filter",
+								"item27": "custrecord_sr_250_lubricate",
+								"item28": "custrecord_sr_500excv_change_pump_oil",
+								"item29": "custrecord_sr_500excv_change_travel_gear",
+								"item30": "custrecord_sr_500excv_replace_case_drain",
+								"item31": "custrecord_sr_500excv_check_track_roller",
+								"item32": "custrecord_sr_500excv_check_truck_sag",
+								"item33": "custrecord_sr_500excv_check_battery_term",
+								"item34": "custrecord_sr_1000excv_replace_air_elem",
+								"item35": "custrecord_sr_1000excv_replace_filters",
+								"item36": "custrecord_sr_1000excv_clean_engine",
+								"item37": "custrecord_sr_2000excv_change_oil",
+								"item38": "custrecord_sr_2000excv_clean_suction",
+								"item39": "custrecord_sr_2000excv_clean_fillstrain",
+								"item40": "custrecord_sr_2000excv_carry_out_tune",
+								"item41": "custrecord_sr_2000excv_replace_air_valve",
+								"item42": "custrecord_sr_2000excv_replace_filters",
+								"item43": "custrecord_sr_2000excv_replace_fan",
+								"item44": "custrecord_sr_4000excv_coolant",
+								"item45": "custrecord_sr_4000excv_replace_breather",
+								"item46": "custrecord_sr_comments"
+							}]
+					}
+				},
+				"salesorder": {
+					"record": "salesorder",
+					"filters": ["custcol_nx_asset","anyof","${ options.asset || event.asset }"],
+					"map": {
+						"id": "*custcol_nxc_related_case",
+						"number": "custcol_nxc_related_case.number",
+						"items": [{
+								"item": "item.itemid",
+								"quantity": "quantity",
+								"displayname": "item.displayname|"
+							}]
+					},
+					"sync": "function(method, model, options) { var results = model.constructor.__super__.sync.apply(this, arguments); var ids = results.map(function(attributes) { return attributes.id }); for (var b = ids.length-1; b >= 0; b--) { var a = ids.indexOf(ids[b]); if (a < b) { for (var key in results[b]) results[a][key] = results[b][key]; results.splice(b, 1); } } return results; }"
+				},
+				"winchservicerecord": {
+					"record": "customrecord_nxc_wasr",
+					"filters": ["custrecord_wasr_asset","anyof","${ options.asset || event.asset }"],
+					"map": {
+						"id": "*custrecord_wasr_case",
+						"number": "custrecord_wasr_case.number",
+						"asset": "custrecord_wasr_asset",
+						"winch": [{
+								"wsc_machinemodel": "custrecord_wasr_machinemodel",
+								"wsc_machinehours": "custrecord_wasr_machinehours",
+								"wsc_winchhours": "custrecord_wasr_winchhours",
+								"wsc_wanumber": "custrecord_wasr_wanumber",
+								"wsc_servicetype": "#custrecord_wasr_servicetype",
+								"wsc_item7": "custrecord_wasr_winchreturnfiltersx2",
+								"wsc_item8": "custrecord_wasr_gearboxoils",
+								"wsc_item9": "custrecord_wasr_electricalwiring",
+								"wsc_item10": "custrecord_wasr_dogboneassembly",
+								"wsc_item11": "custrecord_wasr_fairleadassembly",
+								"wsc_item12": "custrecord_wasr_encoderassembly",
+								"wsc_item13": "custrecord_wasr_boomrollerassembly",
+								"wsc_item14": "custrecord_wasr_ropeguardandguides",
+								"wsc_item15": "custrecord_wasr_hydraulicleak",
+								"wsc_item16": "custrecord_wasr_servicesticker",
+								"wsc_item17": "custrecord_wasr_electricalbox",
+								"wsc_item18": "custrecord_wasr_warninglabels",
+								"wsc_item19": "custrecord_wasr_winchvalveblock",
+								"wsc_item20": "custrecord_wasr_safetyswitches",
+								"wsc_item21": "custrecord_wasr_drumcamera",
+								"wsc_item22": "custrecord_wasr_wifi",
+								"wsc_item23": "custrecord_wasr_rearframe",
+								"wsc_item24": "custrecord_wasr_winchdrum",
+								"wsc_item26": "custrecord_wasr_casedrainfilter",
+								"wsc_item27": "custrecord_wasr_gear_box_oils",
+								"wsc_item28": "custrecord_wasr_casedrain",
+								"wsc_item29": "custrecord_wasr_coolerfans",
+								"wsc_item31": "custrecord_wasr_fellingmachinecontrols",
+								"wsc_item32": "custrecord_wasr_cellcalibrate",
+								"wsc_item33": "custrecord_wasr_fellingmachinetowhitch",
+								"wsc_item34": "custrecord_wasr_softwareupdate",
+								"wsc_item35": "custrecord_wasr_winchpressuresretune",
+								"wsc_item36": "custrecord_wasr_roperigging",
+								"wsc_item37": "custrecord_wasr_comment",
+								"wsc_item38": "custrecord_wasr_lhcase",
+								"wsc_item39": "custrecord_wasr_rhcase",
+								"wsc_item40": "custrecord_wasr_tensionpdf"
+							}]
+					},
+					"element": {
+						"._label": {
+							"class": "el-12 h4 main-padding suite-section-heading",
+							"column": null,
+							"type": "inlinehtml",
+							"readonly": true
+						}
+					}
+				},
+				"carriageservicerecord": {
+					"record": "customrecord_nxc_gsr",
+					"filters": [
+						["custrecord_gsr_asset","anyof","${ options.asset || event.asset }"]
+					],
+					"map": {
+						"number": "custrecord_gsr_case.number",
+						"id": "*custrecord_gsr_case",
+						"carriage": [{
+								"gsr_date": "custrecord_gsr_date",
+								"gsr_asset": "custrecord_gsr_asset",
+								"gsr_ffcno": "custrecord_gsr_ffcno",
+								"gsr_servicetype": "custrecord_gsr_servicetype",
+								"gsr_item1": "custrecord_gsr_engineoildrainandrefill",
+								"gsr_item2": "custrecord_gsr_grapplegreaseandcheck",
+								"gsr_item3": "custrecord_gsr_oilleakscheck",
+								"gsr_item4": "custrecord_gsr_engineoilfilterreplace",
+								"gsr_item5": "custrecord_gsr_sheavesgreaseandcheck",
+								"gsr_item6": "custrecord_gsr_fluidlevelscheck",
+								"gsr_item7": "custrecord_gsr_fuelfilterinlineandspinpn",
+								"gsr_item8": "custrecord_gsr_airfilter",
+								"gsr_item9": "custrecord_gsr_hydraulicreturnfilter",
+								"gsr_item10": "custrecord_gsr_lights",
+								"gsr_item11": "custrecord_gsr_ropeconnections",
+								"gsr_item12": "custrecord_gsr_hydraulichosing",
+								"gsr_item13": "custrecord_gsr_enginecoolingfins",
+								"gsr_item14": "custrecord_gsr_valveblock",
+								"gsr_item15": "custrecord_gsr_electricalwiring",
+								"gsr_item16": "custrecord_gsr_electricalbox",
+								"gsr_item17": "custrecord_gsr_tv",
+								"gsr_item18": "custrecord_gsr_camera",
+								"gsr_item19": "custrecord_gsr_engineoilcatchcan",
+								"gsr_item20": "custrecord_gsr_hydraulicpressure",
+								"gsr_item21": "custrecord_gsr_pressurebuilduptime",
+								"gsr_item22": "custrecord_gsr_battery",
+								"gsr_item23": "custrecord_gsr_carriagefunctions",
+								"gsr_item24": "custrecord_gsr_alternatorbelt",
+								"gsr_item25": "custrecord_gsr_enginemount",
+								"gsr_item26": "custrecord_gsr_safetyswitches",
+								"gsr_item27": "custrecord_gsr_cameratransmitterandosd",
+								"gsr_item28": "custrecord_gsr_aerials",
+								"gsr_item29": "custrecord_gsr_firesupperssion",
+								"gsr_item30": "custrecord_gsr_grapplebrakes",
+								"gsr_item31": "custrecord_gsr_bolts",
+								"gsr_item32": "custrecord_gsr_carriageframeanddoors",
+								"gsr_item33": "custrecord_gsr_ropesguides",
+								"gsr_item34": "custrecord_gsr_lubesticker",
+								"gsr_item35": "custrecord_gsr_grappleopenclosetime",
+								"gsr_item36": "custrecord_gsr_grapplepinbolts",
+								"gsr_item37": "custrecord_gsr_hydraulicoil",
+								"gsr_item38": "custrecord_gsr_enginerpm",
+								"gsr_item39": "custrecord_gsr_hydraulicpressurefilters",
+								"gsr_item40": "custrecord_gsr_accumulatorgaspressure",
+								"gsr_item41": "custrecord_gsr_enginevalveclearance",
+								"gsr_item42": "custrecord_gsr_alternatorbeltreplace",
+								"gsr_item43": "custrecord_gsr_comments"
+							}]
+					}
+				}
+			},
+			"element": {
+				"items": {
+					"label": "PARTS & CHARGES",
+					"type": "table"
+				},
+				"item": {
+					"label": "Item",
+					"type": "text",
+					"parent": "items",
+					"column": 1
+				},
+				"displayname": {
+					"label": "Item Name",
+					"type": "text",
+					"parent": "items",
+					"column": 2
+				},
+				"quantity": {
+					"label": "Quantity",
+					"type": "number",
+					"parent": "items",
+					"column": 3
+				},
+				"number": {
+					"label": "Number",
+					"type": "text",
+					"column": 3,
+					"class": "el-4"
+				},
+				"servicerecord": {
+					"type": "table",
+					"label": "GENERIC SERVICE CHECKLIST"
+				},
+				"custrecord_sr_machine_type": {
+					"type": "text",
+					"label": "Machine Type",
+					"parent": "servicerecord"
+				},
+				"custrecord_sr_date": {
+					"type": "date",
+					"label": "Date",
+					"parent": "servicerecord"
+				},
+				"custrecord_sr_hours": {
+					"type": "number",
+					"label": "Hours",
+					"parent": "servicerecord"
+				},
+				"custrecord_sr_servicetype": {
+					"type": "text",
+					"label": "Service Type",
+					"parent": "servicerecord",
+					"column": 1
+				},
+				"item1": {
+					"type": "checkbox",
+					"label": "Drain fuel tank sump",
+					"parent": "servicerecord"
+				},
+				"item2": {
+					"type": "checkbox",
+					"label": "Clean Fuel tank inlet screen",
+					"parent": "servicerecord"
+				},
+				"item3": {
+					"type": "checkbox",
+					"label": "Clean fuel suction screen",
+					"parent": "servicerecord"
+				},
+				"item4": {
+					"type": "checkbox",
+					"label": "Clean primary air cleaner element",
+					"parent": "servicerecord"
+				},
+				"item5": {
+					"type": "checkbox",
+					"label": "Clean air inlet screen and cooling package",
+					"parent": "servicerecord"
+				},
+				"item6": {
+					"type": "checkbox",
+					"label": "Clean cab filters",
+					"parent": "servicerecord"
+				},
+				"item7": {
+					"type": "checkbox",
+					"label": "Check air intake system",
+					"parent": "servicerecord"
+				},
+				"item8": {
+					"type": "checkbox",
+					"label": "Check for cracks",
+					"parent": "servicerecord"
+				},
+				"item9": {
+					"type": "checkbox",
+					"label": "Check front attachment",
+					"parent": "servicerecord"
+				},
+				"item10": {
+					"type": "checkbox",
+					"label": "Check pin & bush wear",
+					"parent": "servicerecord"
+				},
+				"item11": {
+					"type": "checkbox",
+					"label": "Check hosing & wiring",
+					"parent": "servicerecord"
+				},
+				"item12": {
+					"type": "checkbox",
+					"label": "Check drive belt condition and tension",
+					"parent": "servicerecord"
+				},
+				"item13": {
+					"type": "checkbox",
+					"label": "Check fire extinguisher & suppression",
+					"parent": "servicerecord"
+				},
+				"item14": {
+					"type": "checkbox",
+					"label": "Check dash instruments and controls",
+					"parent": "servicerecord"
+				},
+				"item15": {
+					"type": "checkbox",
+					"label": "Check seat belt condition & operation",
+					"parent": "servicerecord"
+				},
+				"item16": {
+					"type": "checkbox",
+					"label": "Check latches & emergency exits",
+					"parent": "servicerecord"
+				},
+				"item17": {
+					"type": "checkbox",
+					"label": "Check lights and horn",
+					"parent": "servicerecord"
+				},
+				"item18": {
+					"type": "checkbox",
+					"label": "Check machine operation",
+					"parent": "servicerecord"
+				},
+				"item19": {
+					"type": "checkbox",
+					"label": "Check surge tank & radiator level",
+					"parent": "servicerecord"
+				},
+				"item20": {
+					"type": "checkbox",
+					"label": "Check pump transmission oil level",
+					"parent": "servicerecord"
+				},
+				"item21": {
+					"type": "checkbox",
+					"label": "Check hydraulic oil level",
+					"parent": "servicerecord"
+				},
+				"item22": {
+					"type": "checkbox",
+					"label": "Check travel gear oil (Processor)",
+					"parent": "servicerecord"
+				},
+				"item23": {
+					"type": "checkbox",
+					"label": "Change travel gear oil (Felling/Grapple)",
+					"parent": "servicerecord"
+				},
+				"item24": {
+					"type": "checkbox",
+					"label": "Change engine oil",
+					"parent": "servicerecord"
+				},
+				"item25": {
+					"type": "checkbox",
+					"label": "Replace engine oil filter",
+					"parent": "servicerecord"
+				},
+				"item26": {
+					"type": "checkbox",
+					"label": "Replace fuel filters",
+					"parent": "servicerecord"
+				},
+				"item27": {
+					"type": "checkbox",
+					"label": "Lubricate as per chart",
+					"parent": "servicerecord"
+				},
+				"item28": {
+					"type": "checkbox",
+					"label": "Change pump transmission oil",
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 2 )",
+					"parent": "servicerecord"
+				},
+				"item29": {
+					"type": "checkbox",
+					"label": "Change travel gear oil (Processor/WA)",
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 2 )",
+					"parent": "servicerecord"
+				},
+				"item30": {
+					"type": "checkbox",
+					"label": "Replace case drain filter (Processor)",
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 2 )",
+					"parent": "servicerecord"
+				},
+				"item31": {
+					"type": "checkbox",
+					"label": "Check track rollers & idlers",
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 2 )",
+					"parent": "servicerecord"
+				},
+				"item32": {
+					"type": "checkbox",
+					"label": "Check and adjust track sag",
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 2 )",
+					"parent": "servicerecord"
+				},
+				"item33": {
+					"type": "checkbox",
+					"label": "Check battery terminals & electrolyte levels",
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 2 )",
+					"parent": "servicerecord"
+				},
+				"item34": {
+					"type": "checkbox",
+					"label": "Replace air cleaner elements",
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 4 )",
+					"parent": "servicerecord"
+				},
+				"item35": {
+					"type": "checkbox",
+					"label": "Replace hydraulic filters",
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 4 )",
+					"parent": "servicerecord"
+				},
+				"item36": {
+					"type": "checkbox",
+					"label": "Clean engine crankcase vent tube",
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 4 )",
+					"parent": "servicerecord"
+				},
+				"item37": {
+					"type": "checkbox",
+					"label": "Change hydraulic oil",
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 5 )",
+					"parent": "servicerecord"
+				},
+				"item38": {
+					"type": "checkbox",
+					"label": "Clean hydraulic suction strainer",
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 5 )",
+					"parent": "servicerecord"
+				},
+				"item39": {
+					"type": "checkbox",
+					"label": "Clean hydraulic fill strainer",
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 5 )",
+					"parent": "servicerecord"
+				},
+				"item40": {
+					"type": "checkbox",
+					"label": "Carry out top tune",
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 5 )",
+					"parent": "servicerecord"
+				},
+				"item41": {
+					"type": "checkbox",
+					"label": "Replace air cleaner dust unloader valve",
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 5 )",
+					"parent": "servicerecord"
+				},
+				"item42": {
+					"type": "checkbox",
+					"label": "Replace cab filters",
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 5 )",
+					"parent": "servicerecord"
+				},
+				"item43": {
+					"type": "checkbox",
+					"label": "Replace fan & A/C belts",
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 5 )",
+					"parent": "servicerecord"
+				},
+				"item44": {
+					"type": "checkbox",
+					"label": "Change coolant",
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 12 )",
+					"parent": "servicerecord"
+				},
+				"item45": {
+					"type": "checkbox",
+					"label": "Replace hydraulic gap breather",
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 12 )",
+					"parent": "servicerecord"
+				},
+				"item46": {
+					"type": "longtext",
+					"label": "Comments",
+					"parent": "servicerecord"
+				},
+				"servicedocument": {
+					"label": "Service Document",
+					"type": "file",
+					"readonly": true,
+					"parent": "servicerecord"
+				},
+				"custrecord_sr_500excv_(.+)": {
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 2 )"
+				},
+				"custrecord_sr_1000excv_(.+)": {
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 4 )"
+				},
+				"custrecord_sr_2000excv_(.+)": {
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 5 )"
+				},
+				"custrecord_sr_4000excv_(.+)": {
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 12 )"
+				},
+				"header0": {
+					"label": "250 Hour",
+					"type": "inlinehtml",
+					"readonly": true,
+					"class": "el-12 h4 main-padding suite-section-heading",
+					"index": 7,
+					"parent": "servicerecord"
+				},
+				"header1": {
+					"label": "500 Hour (Include Maintenance & 250hr Checks)",
+					"type": "inlinehtml",
+					"readonly": true,
+					"class": "el-12 h4 main-padding suite-section-heading",
+					"index": 32,
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 2 )",
+					"parent": "servicerecord"
+				},
+				"header2": {
+					"label": "1000 Hour (Include Maintenance, 250hr, 500hr Checks)",
+					"type": "inlinehtml",
+					"readonly": true,
+					"class": "el-12 h4 main-padding suite-section-heading",
+					"index": 39,
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 4 )",
+					"parent": "servicerecord"
+				},
+				"header3": {
+					"label": "2000 Hour (Include Maintenance, 250hr, 500hr, 1000hr Checks)",
+					"type": "inlinehtml",
+					"readonly": true,
+					"class": "el-12 h4 main-padding suite-section-heading",
+					"index": 43,
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 5 )",
+					"parent": "servicerecord"
+				},
+				"header4": {
+					"label": "4000 Hour (Include Maintenance, 250hr, 500hr, 1000hr, 2000hr Checks)",
+					"type": "inlinehtml",
+					"readonly": true,
+					"class": "el-12 h4 main-padding suite-section-heading",
+					"index": 51,
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 12 )",
+					"parent": "servicerecord"
+				},
+				"winch": {
+					"label": "WINCH SERVICE CHECKLIST",
+					"type": "table"
+				},
+				"wsc_(.+)": {
+					"parent": "winch"
+				},
+				"carriage": {
+					"label": "CARRIAGE SERVICE CHECKLIST",
+					"type": "table"
+				},
+				"gsr_(.+)": {
+					"parent": "carriage"
+				},
+				"wsc_machinemodel": {
+					"type": "text",
+					"label": "Machine Type",
+					"parent": "winch"
+				},
+				"wsc_machinehours": {
+					"type": "number",
+					"label": "Machine Hours",
+					"parent": "winch",
+					"column": 2
+				},
+				"wsc_winchhours": {
+					"type": "number",
+					"label": "Winch Hours",
+					"parent": "winch",
+					"column": 3
+				},
+				"wsc_wanumber": {
+					"type": "number",
+					"parent": "winch",
+					"label": "WA Hours"
+				},
+				"wsc_servicetype": {
+					"type": "text",
+					"parent": "winch",
+					"label": "Service Type",
+					"column": 1
+				},
+				"wsc_item6": {
+					"label": "500 Hour Service",
+					"type": "inlinehtml",
+					"readonly": true,
+					"parent": "winch",
+					"class": "el-12 h4 main-padding suite-section-heading"
+				},
+				"wsc_item7": {
+					"type": "text",
+					"parent": "winch",
+					"label": "Winch Return Filters x2 Replace"
+				},
+				"wsc_item8": {
+					"type": "checkbox",
+					"label": "Gear Box Oils - Check",
+					"parent": "winch"
+				},
+				"wsc_item9": {
+					"type": "checkbox",
+					"label": "Electrical Wiring - Check",
+					"parent": "winch"
+				},
+				"wsc_item10": {
+					"type": "checkbox",
+					"label": "Dog Bone Assembly - Check",
+					"parent": "winch"
+				},
+				"wsc_item11": {
+					"type": "checkbox",
+					"label": "Fairlead Assembly - Check",
+					"parent": "winch"
+				},
+				"wsc_item12": {
+					"type": "checkbox",
+					"label": "Encoder Assembly - Check",
+					"parent": "winch"
+				},
+				"wsc_item13": {
+					"type": "checkbox",
+					"label": "Boom Roller Assembly - Check",
+					"parent": "winch"
+				},
+				"wsc_item14": {
+					"type": "checkbox",
+					"label": "Rope Guard & Guides - Check",
+					"parent": "winch"
+				},
+				"wsc_item15": {
+					"type": "checkbox",
+					"label": "Hydraulic Leak - Check",
+					"parent": "winch"
+				},
+				"wsc_item16": {
+					"type": "text",
+					"label": "Service Sticker",
+					"parent": "winch"
+				},
+				"wsc_item17": {
+					"type": "checkbox",
+					"label": "Electrical Box - Internal Components",
+					"parent": "winch"
+				},
+				"wsc_item18": {
+					"type": "checkbox",
+					"label": "Warning Label - Check",
+					"parent": "winch"
+				},
+				"wsc_item19": {
+					"type": "checkbox",
+					"label": "Winch Valve Block - Check",
+					"parent": "winch"
+				},
+				"wsc_item20": {
+					"type": "checkbox",
+					"label": "Safety Switches - Check",
+					"parent": "winch"
+				},
+				"wsc_item21": {
+					"type": "checkbox",
+					"label": "Drum Camera - Check",
+					"parent": "winch"
+				},
+				"wsc_item22": {
+					"type": "checkbox",
+					"label": "WIFI Aerials - Check",
+					"parent": "winch"
+				},
+				"wsc_item23": {
+					"type": "checkbox",
+					"label": "Rear Frame - Check",
+					"parent": "winch"
+				},
+				"wsc_item24": {
+					"type": "checkbox",
+					"label": "Winch Drum - Check",
+					"parent": "winch"
+				},
+				"wsc_item25": {
+					"label": "1000 Hour Service",
+					"type": "inlinehtml",
+					"readonly": true,
+					"class": "el-12 h4 main-padding suite-section-heading",
+					"parent": "winch"
+				},
+				"wsc_item26": {
+					"type": "text",
+					"label": "Case Drain Filter - Replace",
+					"parent": "winch"
+				},
+				"wsc_item27": {
+					"type": "text",
+					"label": "Gear Box Oils - Drain and refill",
+					"parent": "winch"
+				},
+				"wsc_item28": {
+					"type": "checkbox",
+					"label": "Case Drain - Test",
+					"parent": "winch"
+				},
+				"wsc_item29": {
+					"type": "checkbox",
+					"label": "Cooler Fans - Test",
+					"parent": "winch"
+				},
+				"wsc_item30": {
+					"label": "Health Check (Include 500 and 1000 Hr Service items Except for filters and oil replacement)",
+					"type": "inlinehtml",
+					"readonly": true,
+					"class": "el-12 h4 main-padding suite-section-heading",
+					"parent": "winch"
+				},
+				"wsc_item31": {
+					"type": "checkbox",
+					"label": "Felling Machine Controls - Test",
+					"parent": "winch"
+				},
+				"wsc_item32": {
+					"type": "text",
+					"label": "Local Cell - Calibrate",
+					"parent": "winch"
+				},
+				"wsc_item33": {
+					"type": "checkbox",
+					"label": "Felling Machine Tow Hitch - Test",
+					"parent": "winch"
+				},
+				"wsc_item34": {
+					"type": "text",
+					"label": "Software - Update",
+					"parent": "winch"
+				},
+				"wsc_item35": {
+					"type": "checkbox",
+					"label": "Winch Pressures - Retune",
+					"parent": "winch"
+				},
+				"wsc_item36": {
+					"type": "checkbox",
+					"label": "Rope & Rigging - Check",
+					"parent": "winch"
+				},
+				"wsc_item37": {
+					"type": "textarea",
+					"label": "Comment",
+					"parent": "winch"
+				},
+				"wsc_item38": {
+					"type": "number",
+					"label": "LH Case",
+					"parent": "winch"
+				},
+				"wsc_item39": {
+					"type": "number",
+					"label": "RH Case",
+					"parent": "winch"
+				},
+				"wsc_item40": {
+					"type": "Text",
+					"label": "Tension PDF",
+					"parent": "winch"
+				},
+				"gsr_date": {
+					"type": "Text",
+					"label": "Date",
+					"parent": "carriage"
+				},
+				"gsr_asset": {
+					"type": "Text",
+					"label": "Asset",
+					"parent": "carriage"
+				},
+				"gsr_ffcno": {
+					"type": "Text",
+					"label": "FFC No.",
+					"parent": "carriage"
+				},
+				"gsr_servicetype": {
+					"type": "Text",
+					"label": "Service Type",
+					"parent": "carriage"
+				},
+				"gsr_item1": {
+					"type": "checkbox",
+					"label": "Engine Oil - Drain And Refill",
+					"parent": "carriage"
+				},
+				"gsr_item2": {
+					"type": "checkbox",
+					"label": "Grapple - Grease and Check",
+					"parent": "carriage"
+				},
+				"gsr_item3": {
+					"type": "checkbox",
+					"label": "Oil Leaks - Check",
+					"parent": "carriage"
+				},
+				"gsr_item4": {
+					"type": "checkbox",
+					"label": "Engine Oil Filter - Replace",
+					"parent": "carriage"
+				},
+				"gsr_item5": {
+					"type": "checkbox",
+					"label": "Sheaves - Grease and Check",
+					"parent": "carriage"
+				},
+				"gsr_item6": {
+					"type": "checkbox",
+					"label": "Fluid Levels - Check",
+					"parent": "carriage"
+				},
+				"gsr_item7": {
+					"type": "checkbox",
+					"label": "Fuel Filter Inline and Spin on - Replace",
+					"parent": "carriage"
+				},
+				"gsr_item8": {
+					"type": "checkbox",
+					"label": "Air Filter - Replace",
+					"parent": "carriage"
+				},
+				"gsr_item9": {
+					"type": "checkbox",
+					"label": "Hydraulic Return Filter - Replace",
+					"parent": "carriage"
+				},
+				"gsr_item10": {
+					"type": "checkbox",
+					"label": "Lights - Check",
+					"parent": "carriage"
+				},
+				"gsr_item11": {
+					"type": "checkbox",
+					"label": "Rope Connections - Inspect",
+					"parent": "carriage"
+				},
+				"gsr_item12": {
+					"type": "checkbox",
+					"label": "Hydraulic Hosing - Check",
+					"parent": "carriage"
+				},
+				"gsr_item13": {
+					"type": "checkbox",
+					"label": "Engine Cooling Fins - Blow Out",
+					"parent": "carriage"
+				},
+				"gsr_item14": {
+					"type": "checkbox",
+					"label": "Valve Block - Check",
+					"parent": "carriage"
+				},
+				"gsr_item15": {
+					"type": "checkbox",
+					"label": "Electrical Wiring - Check",
+					"parent": "carriage"
+				},
+				"gsr_item16": {
+					"type": "checkbox",
+					"label": "Electrical Box - Internal Components",
+					"parent": "carriage"
+				},
+				"gsr_item17": {
+					"type": "checkbox",
+					"label": "TV - Check",
+					"parent": "carriage"
+				},
+				"gsr_item18": {
+					"type": "checkbox",
+					"label": "Camera - Lead",
+					"parent": "carriage"
+				},
+				"gsr_item19": {
+					"type": "checkbox",
+					"label": "Engine Oil Catch Can - Drain",
+					"parent": "carriage"
+				},
+				"gsr_item20": {
+					"type": "checkbox",
+					"label": "Hydraulic Pressure - Test & Records",
+					"parent": "carriage"
+				},
+				"gsr_item21": {
+					"type": "checkbox",
+					"label": "Pressure Build up Time - Test & Record",
+					"parent": "carriage"
+				},
+				"gsr_item22": {
+					"type": "checkbox",
+					"label": "Battery - Test and Check",
+					"parent": "carriage"
+				},
+				"gsr_item23": {
+					"type": "checkbox",
+					"label": "Carriage functions - Check",
+					"parent": "carriage"
+				},
+				"gsr_item24": {
+					"type": "checkbox",
+					"label": "Alternator Belt - Check (2150 only)",
+					"parent": "carriage"
+				},
+				"gsr_item25": {
+					"type": "checkbox",
+					"label": "Engine Mounts - Check",
+					"parent": "carriage"
+				},
+				"gsr_item26": {
+					"type": "checkbox",
+					"label": "Safety Switches - Test",
+					"parent": "carriage"
+				},
+				"gsr_item27": {
+					"type": "checkbox",
+					"label": "Camera, Transmitter And OSD - Check",
+					"parent": "carriage"
+				},
+				"gsr_item28": {
+					"type": "checkbox",
+					"label": "Aerials - Check",
+					"parent": "carriage"
+				},
+				"gsr_item29": {
+					"type": "checkbox",
+					"label": "Fire Suppression - Check",
+					"parent": "carriage"
+				},
+				"gsr_item30": {
+					"type": "checkbox",
+					"label": "Grapple Brakes - Check",
+					"parent": "carriage"
+				},
+				"gsr_item31": {
+					"type": "checkbox",
+					"label": "Bolts - Check",
+					"parent": "carriage"
+				},
+				"gsr_item32": {
+					"type": "checkbox",
+					"label": "Carriage Frame And Doors - Inspect",
+					"parent": "carriage"
+				},
+				"gsr_item33": {
+					"type": "checkbox",
+					"label": "Ropes Guides - Inspect",
+					"parent": "carriage"
+				},
+				"gsr_item34": {
+					"type": "checkbox",
+					"label": "Lube Sticker",
+					"parent": "carriage"
+				},
+				"gsr_item35": {
+					"type": "checkbox",
+					"label": "Grapple Open Close Time - Test",
+					"parent": "carriage"
+				},
+				"gsr_item36": {
+					"type": "checkbox",
+					"label": "Grapple Pin Bolts - Retorque",
+					"parent": "carriage"
+				},
+				"gsr_item37": {
+					"type": "checkbox",
+					"label": "Hydraulic Oil - Drain and Replace",
+					"parent": "carriage"
+				},
+				"gsr_item38": {
+					"type": "checkbox",
+					"label": "Engine RPM - Check and Adjust",
+					"parent": "carriage"
+				},
+				"gsr_item39": {
+					"type": "checkbox",
+					"label": "Hydraulic Pressure Filter/s - Replace",
+					"parent": "carriage"
+				},
+				"gsr_item40": {
+					"type": "checkbox",
+					"label": "Accumulator Gas Pressure - Check",
+					"parent": "carriage"
+				},
+				"gsr_item41": {
+					"type": "checkbox",
+					"label": "Engine Valve Clearance - Check",
+					"parent": "carriage"
+				},
+				"gsr_item42": {
+					"type": "checkbox",
+					"label": "Alternator Belt - Replace (2150 Only)",
+					"parent": "carriage"
+				},
+				"gsr_item43": {
+					"type": "textarea",
+					"label": "Comments:",
+					"parent": "carriage"
+				}
+			}
+		},
+		"machineasset": {
+			"max": 1,
+			"label": "Machine",
+			"form": {
+				"customform": 149,
+				"exclude": ["name","parent","custrecord_nx_asset_customer","custrecord_nx_asset_item","custrecord_nx_asset_transaction","custrecord_nx_asset_address","custrecord_nx_asset_latitude","custrecord_nx_asset_longitude","custrecord_na_asset_type","custrecord_nx_asset_region","custrecord_na_bom"]
+			},
+			"element": {
+				"custrecord_na_bom": {
+					"type": "file",
+					"readonly": true,
+					"label": "BOM PDF"
+				},
+				"custrecord_na_service_type": {
+					"hidden": "(!custrecord_na_service_type.value)"
+				},
+				"custrecord_na_machine_type": {
+					"readonly": "(custrecord_na_machine_type.value)"
+				},
+				"custrecord_na_num_hours": {
+					"readonly": true
+				}
+			},
+			"article": {
+				"record": "customrecord_nx_asset",
+				"filters": ["internalid","anyof","${ options.asset || event.asset }"],
+				"filterby": {
+					"id": "${ options.asset || event.asset }"
+				},
+				"map": {
+					"custrecord_na_bom": {
+						"id": "=formulatext:{custrecord_na_bom.id}",
+						"url": "formulatext:'${url}file/'||{custrecord_na_bom.id}||'&key=${user.key}'"
+					}
+				}
+			}
+		},
+		"servicerecord": {
+			"//": "changed from child service record and removed service record, see if can be done in single tab",
+			"icon": "wrench",
+			"hidden": "${ event.teamuser ||  !( event.assettype == 2 ? options.assetservicetype :  event.caseservicetype ) }",
+			"max": 1,
+			"enable": "commenced",
+			"label": "General ${ options.assetservicetype && options.assetservicetype .label || event.caseservicetype && event.caseservicetype .label || null }",
+			"form": {
+				"customform": 118,
+				"exclude": ["custrecord_sr_customer","custrecord_sr_case","custrecord_sr_task"]
+			},
+			"element": {
+				"custrecord_sr_machine_type": {
+					"type": "select",
+					"readonly": true,
+					"label": "Machine Type",
+					"class": "el-6",
+					"options": {
+						"record": "customlist_nxc_machine_type",
+						"map": {
+							"id": "=internalid",
+							"label": "name|"
+						}
+					},
+					"value": {
+						"id": "${ event.assettype ==2 ? (options.assetmachinetype && options.assetmachinetype.id) : (event.assetmachinetype && event.assetmachinetype.id)  }",
+						"label": "${ event.assettype ==2 ? (options.assetmachinetype && options.assetmachinetype.label) : (event.assetmachinetype.label && event.assetmachinetype.label)  }"
+					}
+				},
+				".+": {
+					"class": "el-6"
+				},
+				"custrecord_sr_250_header": {
+					"class": "el-12 h4 main-padding suite-section-heading"
+				},
+				"custrecord_sr_500excv_header": {
+					"class": "el-12 h4 main-padding suite-section-heading"
+				},
+				"custrecord_sr_1000excv_header": {
+					"class": "el-12 h4 main-padding suite-section-heading"
+				},
+				"custrecord_sr_2000excv_header": {
+					"class": "el-12 h4 main-padding suite-section-heading"
+				},
+				"custrecord_sr_4000excv_header": {
+					"class": "el-12 h4 main-padding suite-section-heading"
+				},
+				"custrecord_sr_date": {
+					"type": "date",
+					"label": "Date",
+					"class": "el-6"
+				},
+				"custrecord_sr_hours": {
+					"type": "integer",
+					"label": "Hours",
+					"class": "el-6"
+				},
+				"custrecord_sr_servicetype": {
+					"type": "select",
+					"label": "Service Type",
+					"readonly": true,
+					"class": "el-6",
+					"options": {
+						"record": "customlist_nxc_genericservicestype",
+						"map": {
+							"id": "=internalid",
+							"label": "name|"
+						}
+					},
+					"value": {
+						"id": "${ event.assettype == 2 ? options.assetservicetype && options.assetservicetype.id : event.caseservicetype && event.caseservicetype.id }",
+						"label": "${ event.assettype == 2 ? options.assetservicetype && options.assetservicetype.label : event.caseservicetype && event.caseservicetype.label }"
+					}
+				},
+				"servicedocument": {
+					"label": "Upload Document",
+					"type": "file",
+					"class": "el-6"
+				},
+				"custrecord_sr_500excv_(.+)": {
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 2 )"
+				},
+				"custrecord_sr_1000excv_(.+)": {
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 4 )"
+				},
+				"custrecord_sr_2000excv_(.+)": {
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 5 )"
+				},
+				"custrecord_sr_4000excv_(.+)": {
+					"hidden": "(!custrecord_sr_servicetype.value || custrecord_sr_servicetype.value.id < 12 )"
+				}
+			},
+			"article": {
+				"record": "customrecord_nxc_servicerecord",
+				"filters": [
+					["custrecord_sr_asset","anyof","${ options.asset || event.asset }"],"and",
+					["custrecord_sr_case","anyof","${event.supportcase}"]
+				],
+				"filterby": {
+					"asset": "${ options.asset || event.asset }"
+				},
+				"map": {
+					"id": "internalid",
+					"asset": "custrecord_sr_asset",
+					"custrecord_sr_hours": "custrecord_sr_hours",
+					"custrecord_sr_date": "custrecord_sr_date",
+					"servicedocument": {
+						"id": "=custrecord_sr_doc",
+						"url": "formulatext:'${url}file/'||{custrecord_sr_doc.id}||'&key=${user.key}'"
+					},
+					"custrecord_sr_servicetype": {
+						"id": "=custrecord_sr_servicetype",
+						"label": "=custrecord_sr_servicetype#"
+					},
+					"custrecord_sr_machine_type": {
+						"id": "=custrecord_sr_machine_type",
+						"label": "=custrecord_sr_machine_type#"
+					}
+				},
+				"defaults": {
+					"custrecord_sr_asset": "${ options.asset || event.asset }",
+					"custrecord_sr_task": "${event.internalid}",
+					"custrecord_sr_case": "${event.supportcase}",
+					"custrecord_sr_customer": "${event.customer}"
+				}
+			}
+		},
+		"carriageservicerecord": {
+			"max": 1,
+			"hidden": "${event.teamuser}",
+			"icon": "wrench",
+			"label": "Carriage ${ event.casecarriageservicetype && event.casecarriageservicetype.label }",
+			"enable": "commenced",
+			"form": {
+				"customform": 130,
+				"exclude": ["custrecord_gsr_asset","custrecord_gsr_case","custrecord_gsr_task","custrecord_gsr_customer"]
+			},
+			"element": {
+				".+": {
+					"class": "el-6"
+				},
+				"._label": {
+					"class": "el-12 h4 main-padding suite-section-heading",
+					"column": null,
+					"type": "inlinehtml",
+					"readonly": true
+				},
+				"custrecord_gsr_servicetype": {
+					"type": "select",
+					"label": "Service Type",
+					"readonly": true,
+					"class": "el-6",
+					"options": {
+						"record": "customlist_nxc_carriageservices",
+						"map": {
+							"id": "=internalid",
+							"label": "name|"
+						}
+					},
+					"value": {
+						"id": "${ event.assettype == 2 ? options.assetwinchservicetype && options.assetwinchservicetype.id : event.casecarriageservicetype && event.casecarriageservicetype.id }",
+						"label": "${ event.assettype == 2 ? options.assetwinchservicetype && options.assetwinchservicetype.label : event.casecarriageservicetype && event.casecarriageservicetype.label  }"
+					}
+				}
+			},
+			"article": {
+				"record": "customrecord_nxc_gsr",
+				"filters": [
+					["custrecord_gsr_case","anyof","${event.supportcase}"],"and",
+					["custrecord_gsr_asset","anyof","${event.asset}"]
+				],
+				"defaults": {
+					"custrecord_gsr_task": "${event.internalid}",
+					"custrecord_gsr_case": "${event.supportcase}",
+					"custrecord_gsr_customer": "${event.customer}",
+					"custrecord_gsr_asset": "${event.asset}"
+				}
+			}
+		},
+		"winchservicerecord": {
+			"max": 1,
+			"//": "hidden if I am a team member, or if the task asset isn't a crew then hidden if there isn't a case winch service type, otherwise (if event asset is crew) then hidden if the options asset doesn't have a whinch service type",
+			"hidden": "${ event.teamuser ||  !( event.assettype == 2 ? options.assetwinchservicetype :  event.casewinchservicetype ) }",
+			"form": {
+				"customform": 129,
+				"exclude": ["custrecord_wasr_asset","custrecord_wasr_case","custrecord_wasr_task","custrecord_wasr_customer"]
+			},
+			"label": "${ options.assetwinchservicetype && options.assetwinchservicetype.label || event.casewinchservicetype && event.casewinchservicetype.label || null }",
+			"icon": "wrench",
+			"enable": "commenced",
+			"element": {
+				".+": {
+					"class": "el-6"
+				},
+				"._label": {
+					"class": "el-12 h4 main-padding suite-section-heading",
+					"column": null,
+					"type": "inlinehtml",
+					"readonly": true
+				},
+				"custrecord_wasr_servicetype": {
+					"type": "select",
+					"label": "Service Type",
+					"readonly": true,
+					"class": "el-6",
+					"options": {
+						"record": "customlist_nxc_winchservicestype",
+						"map": {
+							"id": "=internalid",
+							"label": "name|"
+						}
+					},
+					"value": {
+						"id": "${ event.assettype == 2 ? options.assetwinchservicetype && options.assetwinchservicetype.id :  event.casewinchservicetype && event.casewinchservicetype.id }",
+						"label": "${ event.assettype == 2 ? options.assetwinchservicetype && options.assetwinchservicetype.label :  event.casewinchservicetype && event.casewinchservicetype.label  }"
+					}
+				},
+				"custrecord_wasr_tensionpdf": {
+					"type": "file",
+					"label": "Tension PDF"
+				}
+			},
+			"article": {
+				"record": "customrecord_nxc_wasr",
+				"filters": [
+					["custrecord_wasr_case","anyof","${event.supportcase}"],"and",
+					["custrecord_wasr_asset","anyof","${event.asset}"]
+				],
+				"map": {
+					"custrecord_wasr_servicetype": {
+						"id": "=custrecord_wasr_servicetype",
+						"label": "=custrecord_wasr_servicetype#"
+					},
+					"custrecord_wasr_tensionpdf": {
+						"id": "=custrecord_wasr_tensionpdf",
+						"url": "formulatext:'${url}file/'||{custrecord_wasr_tensionpdf.id}||'&key=${user.key}'"
+					}
+				},
+				"defaults": {
+					"custrecord_wasr_task": "${event.internalid}",
+					"custrecord_wasr_case": "${event.supportcase}",
+					"custrecord_wasr_customer": "${event.customer}",
+					"custrecord_wasr_asset": "${event.asset}"
+				}
+			}
+		},
+		"jsa": {
+			"hidden": "${event.teamuser}",
+			"icon": "wrench",
+			"label": "JSA",
+			"min": 1,
+			"max": 1,
+			"enable": "commenced",
+			"form": {
+				"customform": 119,
+				"exclude": ["custrecord_jsa_asset","custrecord_jsa_case","custrecord_jsa_parent_asset","custrecord_jsa_task","custrecord_jsa_customer"]
+			},
+			"element": {
+				".+": {
+					"class": "el-6"
+				}
+			},
+			"article": {
+				"record": "customrecord_nxc_jsa",
+				"filters": [
+					["custrecord_jsa_task","anyof","${event.internalid}"]
+				],
+				"defaults": {
+					"custrecord_jsa_task": "${event.internalid}",
+					"custrecord_jsa_case": "${event.supportcase}"
+				}
+			}
+		},
+		"hazards": {
+			"hidden": "${event.teamuser}",
+			"icon": "wrench",
+			"label": "Hazards",
+			"min": 1,
+			"enable": "commenced",
+			"form": {
+				"customform": 138,
+				"exclude": ["custrecord_jsahazard_case"]
+			},
+			"element": {
+				".+": {
+					"class": "el-12",
+					"column": 1
+				}
+			},
+			"article": {
+				"record": "customrecord_nxc_jsa_hazards",
+				"filters": [
+					["custrecord_jsahazard_case","anyof","${event.supportcase}"]
+				],
+				"defaults": {
+					"custrecord_jsahazard_case": "${event.supportcase}"
+				}
+			}
+		},
+		"details": {
+			"element": {
+				"internalnote": {
+					"type": "longtext",
+					"label": "Internal Note",
+					"placeholder": "Internal note...",
+					"index": 1
+				},
+				"arrivaltime": {
+					"type": "timeofday",
+					"label": "Arrival Time",
+					"class": "el-6",
+					"index": 2
+				},
+				"departuretime": {
+					"type": "timeofday",
+					"label": "Departure Time",
+					"class": "el-6",
+					"index": 3
+				},
+				"customername": {
+					"type": "text",
+					"label": "Customer Name",
+					"index": 4
+				},
+				"customersignature": {
+					"type": "signature",
+					"label": "Customer Signature",
+					"index": 6
+				},
+				"techniciansignature": {
+					"type": "signature",
+					"label": "Technician Signature",
+					"index": 7
+				}
+			},
+			"article": {
+				"map": {
+					"internalnote": "custevent_nxc_internal_note",
+					"customername": "custevent_nxc_customer_name",
+					"customersignature": "custevent_nxc_customer_signature",
+					"techniciansignature": "custevent_nxc_technician_signature",
+					"arrivaltime": "custevent_nxc_arrival_time",
+					"departuretime": "custevent_nxc_departure_time"
+				}
+			}
+		},
+		"salesorder": {
+			"readonly": true,
+			"label": "Sales Order",
+			"pricelevels": [{
+					"//": "Commissioning and Warranty",
+					"project": [3,5],
+					"case": [1,2,3],
+					"value": {
+						"id": 24,
+						"label": "Discount - 100%"
+					}
+				},{
+					"//": "All Rework",
+					"project": [1,2,3,5],
+					"case": [4],
+					"value": {
+						"id": 24,
+						"label": "Discount - 100%"
+					}
+				}],
+			"element": {
+				"quantity": {
+					"type": "float",
+					"class": "el-3 el-left",
+					"step": 0.01,
+					"min": 0.01,
+					"max": "var opt = (item.value && location.value) ? unique(consumable.options.filter(o=>{ return (o.item.id == item.value.id) && o.location && (o.location.id == location.value.id) }).filter(o=>{ return o.bin ? (o.bin.id == (bin.value && bin.value.id)) : true }).filter(o=>{ return o.lot ? (o.lot.id == (lot.value && lot.value.id)) : true }).filter(o=>{ return o.serial ? (o.serial.id == (serial.value && serial.value[0] && serial.value[0].id)) : true }))[0] : null; return opt ? opt.available : 0"
+				},
+				"quantityavailable": {
+					"type": "text",
+					"label": "Quantity Available",
+					"class": "col-xs-0 col-sm-0 col-md-0",
+					"parent": "items",
+					"readonly": true,
+					"value": "var opt = (item.value && location.value) ? unique(consumable.options.filter(o=>{ return (o.item.id == item.value.id) && o.location && (o.location.id == location.value.id) }).filter(o=>{ return o.bin ? (o.bin.id == (bin.value && bin.value.id)) : true }).filter(o=>{ return o.lot ? (o.lot.id == (lot.value && lot.value.id)) : true }).filter(o=>{ return o.serial ? (o.serial.id == (serial.value && serial.value[0] && serial.value[0].id)) : true }))[0] : null; return opt ? opt.available : 0"
+				},
+				"qtynotify": {
+					"type": "text",
+					"class": "qtynotify col-xs-0 col-sm-0 col-md-0",
+					"parent": "items",
+					"hidden": "qtyAvailable(item.value, quantity.value, quantity.max, consumable.options)",
+					"readonly": true,
+					"value": "*Quantity requested greater than estimated quantity available!*"
+				},
+				"asset": {
+					"type": "select",
+					"label": "Asset",
+					"class": "inline el-6",
+					"value": {
+						"id": "${ event.asset }"
+					},
+					"options": {
+						"record": "customrecord_nx_asset",
+						"filters": [
+							["parent","anyof","${ event.asset || 0 }"],"or",
+							["internalid","anyof","${ event.asset }"]
+						],
+						"map": {
+							"id": "internalid",
+							"label": "name"
+						}
+					},
+					"parent": "items"
+				},
+				"serial": {
+					"column": null
+				},
+				"pricelevel": {
+					"type": "select",
+					"label": "Price Level",
+					"class": "el-3 el-right",
+					"hidden": false,
+					"readonly": true,
+					"parent": "items",
+					"options": {
+						"record": "pricelevel",
+						"map": {
+							"id": "internalid",
+							"label": "name"
+						}
+					},
+					"\\": "need to check project type and set price level value accordingly based on business rules, possibly combine case type as well",
+					"value": "${ var rule, projecttype = parseInt(event.project), casetype = parseInt(event.case); for (var i = 0; i < pricelevels.length; i++) if ((rule = pricelevels[i]) && ~rule.project.indexOf(projecttype) && ~rule.case.indexOf(casetype)) return rule.value; }"
+				},
+				"createpo": {
+					"type": "text",
+					"label": "Create PO",
+					"hidden": true,
+					"parent": "items",
+					"value": ""
+				}
+			},
+			"article": {
+				"idempotencyKey": "${ event.internalid }",
+				"filters": ["custbody_nx_case","anyof","${event.supportcase}"],
+				"map": {
+					"items": [{
+							"line": "line|item.line",
+							"task": "custcol_nx_task|item.custcol_nx_task",
+							"asset": {
+								"id": "=custcol_nx_asset|item.custcol_nx_asset",
+								"label": "custcol_nx_asset#|"
+							},
+							"readonly": "formulatext:case when {item.type.id} like '%Group%' then 'T' else 'F' end",
+							"item": {
+								"id": "=item|item.item",
+								"label": "formulatext: {item.itemid} || ' ' || {item.displayname}|"
+							},
+							"pricelevel": {
+								"id": "=pricelevel|item.price",
+								"label": "#pricelevel|"
+							},
+							"memo": "memo|item.description",
+							"location": {
+								"id": "=location|item.location",
+								"label": "formulatext:regexp_replace({location}, '.* : ')|"
+							},
+							"quantity": "formulatext:ABS({quantity})|item.quantity",
+							"amount": "formulatext:ABS({amount})|",
+							"projecttask": "custcol_nx_projecttask|item.custcol_nx_projecttask"
+						}]
+				},
+				"defaults": {
+					"cseg_wip_project": "${event.wipproject}",
+					"cseg_dce_sales_regi": "${event.salesreg}",
+					"department": "${event.department}",
+					"otherrefnum": "${event.caseponumber}",
+					"customform": 169
+				}
+			}
+		},
+		"newdetails": {
+			"label": "Job Status",
+			"icon": "flag",
+			"enable": "commenced",
+			"min": 1,
+			"max": 1,
+			"element": {
+				"custevent_nxc_task_result": {
+					"type": "select",
+					"label": "Result",
+					"class": "el-6",
+					"index": 1,
+					"required": true,
+					"options": {
+						"record": "customlist_nxc_task_result",
+						"map": {
+							"id": "=internalid",
+							"label": "name|"
+						}
+					}
+				},
+				"custevent_nxc_reason_not_resolved": {
+					"type": "select",
+					"label": "Not Executed Reason",
+					"class": "el-6",
+					"index": 2,
+					"hidden": "!caseclosed.hidden",
+					"options": {
+						"record": "customlist_nxc_reason_not_resolved",
+						"map": {
+							"id": "=internalid",
+							"label": "name|"
+						}
+					}
+				},
+				"caseclosed": {
+					"type": "checkbox",
+					"label": "Close Case",
+					"class": "el-6",
+					"index": 3,
+					"hidden": "!caseclosed.value",
+					"value": "!!(custevent_nxc_task_result.value && custevent_nxc_task_result.value.id == 1)"
+				},
+				"internalnote": {
+					"type": "longtext",
+					"label": "Internal Note",
+					"placeholder": "Internal note..."
+				},
+				"softwareupdate": {
+					"type": "select",
+					"label": "Did you update the Software?  Remember to update the machine info register!",
+					"options": {
+						"record": "customlist_nxc_yes_no_na",
+						"map": {
+							"id": "=internalid",
+							"label": "name|"
+						}
+					}
+				}
+			},
+			"article": {
+				"record": "task",
+				"filters": "${event.internalid}",
+				"map": {
+					"id": "internalid",
+					"caseclosed": "custevent_nx_case_closed",
+					"internalnote": "custevent_nxc_internal_note",
+					"actionstaken": "custevent_nx_actions_taken",
+					"custevent_nxc_task_result": {
+						"id": "=custevent_nxc_task_result",
+						"label": "custevent_nxc_task_result|#"
+					},
+					"custevent_nxc_reason_not_resolved": {
+						"id": "=custevent_nxc_reason_not_resolved",
+						"label": "custevent_nxc_reason_not_resolved|#"
+					},
+					"softwareupdate": {
+						"id": "=custevent_nxc_update_software",
+						"label": "custevent_nxc_update_software#"
+					}
+				}
+			}
+		},
+		"jobcarddetails": {
+			"label": "Job Card Details",
+			"icon": "flag",
+			"enable": "commenced",
+			"min": 1,
+			"max": 1,
+			"element": {
+				"fault": {
+					"type": "textarea",
+					"label": "Fault / Job Details"
+				},
+				"cause": {
+					"type": "select",
+					"label": "Cause",
+					"required": true,
+					"options": {
+						"record": "customlist_nxc_cause",
+						"map": {
+							"id": "internalid",
+							"label": "name"
+						}
+					}
+				},
+				"remedy": {
+					"type": "textarea",
+					"label": "Remedy",
+					"required": true
+				},
+				"softwareupdate": {
+					"type": "select",
+					"label": "Did you update the Software?  Remember to Update the machine!",
+					"options": [{
+							"id": "1",
+							"label": "Yes"
+						},{
+							"id": "2",
+							"label": "No"
+						},{
+							"id": "3",
+							"label": "N/A"
+						}]
+				}
+			},
+			"article": {
+				"record": "supportcase",
+				"filters": ["internalid","anyof","${event.supportcase}"],
+				"map": {
+					"id": "internalid",
+					"cause": {
+						"id": "=custevent_nxc_cause",
+						"label": "#custevent_nxc_cause"
+					},
+					"remedy": "custevent_nxc_remedy",
+					"fault": "custevent_nx_case_details",
+					"faulttype": {
+						"id": "=custevent_nxc_fault",
+						"label": "#custevent_nxc_fault"
+					},
+					"softwareupdate": {
+						"id": "=custevent_nxc_update_software",
+						"label": "custevent_nxc_update_software#"
+					}
+				}
+			}
+		},
+		"signatures": {
+			"label": "Signatures",
+			"icon": "flag",
+			"max": 1,
+			"required": false,
+			"enable": ["commenced","times","newdetails"],
+			"element": {
+				"tech_signature": {
+					"type": "signature",
+					"label": "Technician Signature",
+					"required": true,
+					"class": "el-6",
+					"index": 5
+				},
+				"customername": {
+					"required": true,
+					"type": "text",
+					"label": "Customer Name",
+					"index": 3
+				},
+				"cust_signature": {
+					"type": "signature",
+					"label": "Customer Signature",
+					"required": true,
+					"class": "el-6",
+					"index": 4
+				}
+			},
+			"article": {
+				"record": "task",
+				"filters": "${event.internalid}",
+				"map": {
+					"id": "internalid",
+					"tech_signature": "custevent_nxc_technician_signature",
+					"cust_signature": "custevent_nxc_customer_signature",
+					"customername": "custevent_nxc_customer_name",
+					"arrivaltime": "custevent_nxc_arrival_time",
+					"departuretime": "custevent_nxc_departure_time"
+				}
+			}
+		},
+		"times": {
+			"enable": "commenced",
+			"min": 1,
+			"disable": "completed",
+			"element": {
+				"duration": {
+					"step": 0.25,
+					"min": 0.25,
+					"class": "el-3 el-left"
+				}
+			},
+			"article": {
+				"defaults": {
+					"cseg_wip_project": "${event.wipproject}",
+					"cseg_dce_sales_regi": "${event.salesreg}",
+					"department": "${user.department}"
+				}
+			}
+		},
+		"machinehour": {
+			"hidden": "${event.teamuser}",
+			"icon": "wrench",
+			"label": "Machine Hour",
+			"max": 1,
+			"min": 1,
+			"enable": "commenced",
+			"form": {
+				"customform": 157,
+				"exclude": ["custrecord_sh_task","custrecord_sh_case","custrecord_sh_asset"]
+			},
+			"element": {
+				".+": {
+					"class": "el-12",
+					"column": 1
+				},
+				"custrecord_sh_hours": {
+					"type": "integer",
+					"min": "${ options.currentmachinehour || event.currentmachinehour}",
+					"required": true,
+					"value": "${ options.currentmachinehour || event.currentmachinehour}"
+				},
+				"hoursnotify": {
+					"type": "help",
+					"class": "qtynotify col-xs-0 col-sm-0 col-md-0",
+					"readonly": true,
+					"value": "*Hours entered cannot be less than the current machine hours*"
+				}
+			},
+			"article": {
+				"record": "customrecord_nxc_machinehour",
+				"filters": [
+					["custrecord_sh_task","anyof","${event.internalid}"]
+				],
+				"defaults": {
+					"custrecord_sh_case": "${event.supportcase}",
+					"custrecord_sh_task": "${event.internalid}",
+					"custrecord_sh_asset": "${ options.asset || event.asset }"
+				}
+			}
+		},
+		"asset": {
+			"readonly": true,
+			"icon": "wrench",
+			"label": "Crew",
+			"element": {
+				"description": {
+					"hidden": true
+				},
+				"image": {
+					"hidden": true
+				}
+			},
+			"form": {
+				"customform": 150,
+				"exclude": ["name","parent","custrecord_nx_asset_item","custrecord_nx_asset_customer","custrecord_nx_asset_address","custrecord_nx_asset_address_text","custrecord_nx_asset_transaction","custrecord_nx_asset_item","autoname"]
+			}
+		},
+		"user": {
+			"employee": {
+				"map": {
+					"location": "formulatext[]:nvl({custentity_nxc_location_multiselect.id},0)",
+					"department": "department|"
+				}
+			}
+		},
+		"resettask": {
+			"label": "Reset Task",
+			"icon": "checked",
+			"min": 1,
+			"max": 1,
+			"disable": "commenced",
+			"element": {
+				"reassigntask_div": {
+					"value": "REASSIGN TASK",
+					"type": "inlinehtml",
+					"readonly": true,
+					"class": "el-12 h4 main-padding suite-section-heading",
+					"index": 1
+				},
+				"assigned": {
+					"type": "select",
+					"label": "Assigned",
+					"readonly": false,
+					"hidden": false,
+					"class": "inline el-12",
+					"placeholder": "Assigned...",
+					"options": {
+						"record": "employee",
+						"map": {
+							"id": "internalid",
+							"label": "entityid"
+						}
+					},
+					"index": 2
+				},
+				"status": {
+					"type": "select",
+					"label": "Status",
+					"class": "inline el-12",
+					"placeholder": "Status...",
+					"readonly": true,
+					"options": [{
+							"id": "1",
+							"label": "Not Started"
+						},{
+							"id": "2",
+							"label": "In Progress"
+						},{
+							"id": "3",
+							"label": "Completed"
+						}],
+					"index": 3
+				},
+				"priority": {
+					"type": "select",
+					"label": "Priority",
+					"class": "inline el-12",
+					"placeholder": "Priority...",
+					"options": [{
+							"id": "1",
+							"label": "Low"
+						},{
+							"id": "2",
+							"label": "Medium"
+						},{
+							"id": "3",
+							"label": "High"
+						}],
+					"index": 4
+				},
+				"taskdetails": {
+					"type": "longtext",
+					"label": "Task Details",
+					"class": "inline el-12",
+					"placeholder": "Task details...",
+					"index": 5
+				},
+				"rescheduletask_div": {
+					"value": "RESCHEDULE TASK",
+					"type": "inlinehtml",
+					"readonly": true,
+					"class": "el-12 h4 main-padding suite-section-heading",
+					"index": 6
+				},
+				"startdate": {
+					"type": "date",
+					"label": "Start Date",
+					"class": "inline el-12",
+					"placeholder": "Start date...",
+					"required": true,
+					"index": 7
+				},
+				"enddate": {
+					"type": "date",
+					"label": "Due Date",
+					"class": "inline el-12",
+					"required": true,
+					"placeholder": "Due date...",
+					"index": 8
+				},
+				"starttime": {
+					"type": "time",
+					"label": "Start Time",
+					"class": "inline el-12",
+					"required": true,
+					"placeholder": "Start time...",
+					"index": 9
+				},
+				"endtime": {
+					"type": "time",
+					"label": "End Time",
+					"class": "inline el-12",
+					"placeholder": "End time...",
+					"index": 10,
+					"required": true
+				}
+			},
+			"article": {
+				"record": "task",
+				"filters": "${event.internalid}",
+				"map": {
+					"id": "internalid",
+					"assigned": {
+						"id": "=assigned",
+						"label": "assigned#|"
+					},
+					"status": {
+						"id": "=status",
+						"label": "status#|"
+					},
+					"priority": {
+						"id": "=priority",
+						"label": "priority#|"
+					},
+					"taskdetails": "message",
+					"startdate": "startdate",
+					"enddate": "enddate",
+					"starttime": "starttime",
+					"endtime": "formulatext:to_char(cast({enddate} as timestamp with local time zone),'fmHH:fmMI am')|endtime"
+				}
+			}
+		}
+	},
+	"routes/scheduler": {
+		"colour": {
+			"group": {
+				"crew": {
+					"palette": "warm",
+					"column": "crew",
+					"label": "Crew/External",
+					"items": [{
+							"id": "M1",
+							"label": "M1",
+							"swatch": "bitterlime",
+							"cluster": "1"
+						},{
+							"id": "M3",
+							"label": "M3",
+							"swatch": "shockingpink",
+							"cluster": "2"
+						},{
+							"id": "M5",
+							"label": "M5",
+							"swatch": "sizzlingsunrise",
+							"cluster": "3"
+						},{
+							"id": "M6",
+							"label": "M6",
+							"swatch": "redpigment",
+							"cluster": "4"
+						},{
+							"id": "KDH",
+							"label": "KDH",
+							"swatch": "darkorange",
+							"cluster": "5"
+						},{
+							"id": "NMH",
+							"label": "NMH",
+							"swatch": "laserlemon",
+							"cluster": "6"
+						},{
+							"id": "External",
+							"label": "External",
+							"swatch": "electricviolet",
+							"cluster": "7"
+						},{
+							"id": "Other",
+							"label": "Other",
+							"swatch": "battleshipgrey",
+							"cluster": "8"
+						}]
+				}
+			}
+		},
+		"event": {
+			"projecttask": {
+				"filters": ["internalid","anyof",{
+						"array": true,
+						"default": "0",
+						"projecttasks": {
+							"record": "projecttask",
+							"filters": [
+								["projecttaskassignment.resource","anyof","${ request.parameters.resource }"],"and",
+								["custevent_nx_task_type","noneof","@NONE@"],"and",
+								["custevent_nx_task_type","noneof","14"],"and",
+								["enddate","onorafter","${ request.parameters.start }"],"and",
+								["startdate","onorbefore","${ request.parameters.end }"],"and",
+								["formulatext:case when '${ user.view }' = '0' or {job.subsidiary.id} in (${ user.view }) then 'T' else 'F' end","is","T"]
+							]
+						}
+					}],
+				"map": {
+					"crew": "formulatext: CASE WHEN {custevent_nx_task_asset.id} = '501' THEN 'M1'  WHEN {custevent_nx_task_asset.parent.id} = '501' THEN 'M1' WHEN {custevent_nx_task_asset.id} = '502' THEN 'M3'  WHEN {custevent_nx_task_asset.parent.id} = '502' THEN 'M3' WHEN {custevent_nx_task_asset.id} = '503' THEN 'M5'  WHEN {custevent_nx_task_asset.parent.id} = '503' THEN 'M5' WHEN {custevent_nx_task_asset.parent.id} = '504' THEN 'M6' WHEN {custevent_nx_task_asset.id} = '504' THEN 'M6' WHEN {custevent_nx_task_asset.id} = '506' THEN 'NMH'  WHEN {custevent_nx_task_asset.parent.id} = '506' THEN 'NMH' WHEN {custevent_nx_task_asset.id} = '617' THEN 'KDH'  WHEN {custevent_nx_task_asset.parent.id} = '617' THEN 'KDH' WHEN {custevent_nx_task_asset.id} IS NOT NULL THEN 'External' WHEN {custevent_nx_task_asset.parent.id} IS NOT NULL THEN 'External' ELSE 'Other' END",
+					"label": "formulatext: CASE WHEN {custevent_nx_task_asset.parent.id} = '504' THEN 'M6' WHEN {custevent_nx_task_asset.id} = '504' THEN 'M6' WHEN {custevent_nx_task_asset.id} = '501' THEN 'M1'  WHEN {custevent_nx_task_asset.parent.id} = '501' THEN 'M1' WHEN {custevent_nx_task_asset.id} = '502' THEN 'M3'  WHEN {custevent_nx_task_asset.parent.id} = '502' THEN 'M3' WHEN {custevent_nx_task_asset.id} = '506' THEN 'NMH'  WHEN {custevent_nx_task_asset.parent.id} = '506' THEN 'NMH' WHEN {custevent_nx_task_asset.id} = '617' THEN 'KDH'  WHEN {custevent_nx_task_asset.parent.id} = '617' THEN 'KDH' WHEN {custevent_nx_task_asset.id} = '503' THEN 'M5'  WHEN {custevent_nx_task_asset.parent.id} = '503' THEN 'M5' WHEN {custevent_nx_task_asset.id} IS NOT NULL THEN NVL2({custevent_nx_customer},'External-'||{custevent_nx_customer}, 'External-'||{custevent_nx_task_type}) WHEN {custevent_nx_task_asset.parent.id} IS NOT NULL THEN NVL2({custevent_nx_customer},'External-'||{custevent_nx_customer},'External-'||{custevent_nx_task_type}) ELSE 'Other' END"
+				}
+			},
+			"task": {
+				"sendemail": false,
+				"filters": [
+					[
+						[
+							["assigned","anyof","${ request.parameters.resource }"],"or",
+							[
+								["formulatext:{custevent_nx_task_team.id}","isnot",""],"and",
+								["custevent_nx_task_team","anyof","${ request.parameters.resource }"]
+							]
+						],"and",
+						["startdate","onorafter","${request.parameters.start}"],"and",
+						["startdate","onorbefore","${request.parameters.end}"],"and",
+						["custevent_nx_task_type","noneof","@NONE@"],"and",
+						["custevent_nx_task_type","noneof","14"],"and",
+						["formulatext:case when '${user.view}' = '0' or coalesce({case.subsidiary.id}, {job.subsidiary.id}, {company.subsidiary.id}, 0) in (0,${user.view}) then 'T' else 'F' end","is","T"]
+					],"or",
+					["case.internalid","anyof",{
+							"array": true,
+							"default": "0",
+							"cases": {
+								"all": true,
+								"record": "task",
+								"filters": [
+									[
+										["assigned","anyof","${ request.parameters.resource }"],"or",
+										[
+											["formulatext:{custevent_nx_task_team.id}","isnot",""],"and",
+											["custevent_nx_task_team","anyof","${ request.parameters.resource }"]
+										]
+									],"and",
+									["startdate","onorafter","${request.parameters.start}"],"and",
+									["startdate","onorbefore","${request.parameters.end}"],"and",
+									["custevent_nx_task_type","noneof","@NONE@"],"and",
+									["custevent_nx_task_type","noneof","14"],"and",
+									["formulatext:case when '${user.view}' = '0' or coalesce({case.subsidiary.id}, {job.subsidiary.id}, {company.subsidiary.id}, 0) in (0,${user.view}) then 'T' else 'F' end","is","T"]
+								],
+								"map": "<^case.internalid"
+							}
+						}]
+				],
+				"map": {
+					"link": null,
+					"crew": "formulatext: CASE WHEN {custevent_nx_task_asset.id} = '501' THEN 'M1'  WHEN {custevent_nx_task_asset.parent.id} = '501' THEN 'M1' WHEN {custevent_nx_task_asset.id} = '502' THEN 'M3'  WHEN {custevent_nx_task_asset.parent.id} = '502' THEN 'M3' WHEN {custevent_nx_task_asset.id} = '503' THEN 'M5'  WHEN {custevent_nx_task_asset.parent.id} = '503' THEN 'M5' WHEN {custevent_nx_task_asset.parent.id} = '504' THEN 'M6' WHEN {custevent_nx_task_asset.id} = '504' THEN 'M6' WHEN {custevent_nx_task_asset.id} = '506' THEN 'NMH'  WHEN {custevent_nx_task_asset.parent.id} = '506' THEN 'NMH' WHEN {custevent_nx_task_asset.id} = '617' THEN 'KDH'  WHEN {custevent_nx_task_asset.parent.id} = '617' THEN 'KDH' WHEN {custevent_nx_task_asset.id} IS NOT NULL THEN 'External' WHEN {custevent_nx_task_asset.parent.id} IS NOT NULL THEN 'External' ELSE 'Other' END",
+					"label": "formulatext: CASE WHEN {custevent_nx_task_asset.parent.id} = '504' THEN 'M6' WHEN {custevent_nx_task_asset.id} = '504' THEN 'M6' WHEN {custevent_nx_task_asset.id} = '501' THEN 'M1'  WHEN {custevent_nx_task_asset.parent.id} = '501' THEN 'M1' WHEN {custevent_nx_task_asset.id} = '502' THEN 'M3'  WHEN {custevent_nx_task_asset.parent.id} = '502' THEN 'M3' WHEN {custevent_nx_task_asset.id} = '506' THEN 'NMH'  WHEN {custevent_nx_task_asset.parent.id} = '506' THEN 'NMH' WHEN {custevent_nx_task_asset.id} = '617' THEN 'KDH'  WHEN {custevent_nx_task_asset.parent.id} = '617' THEN 'KDH' WHEN {custevent_nx_task_asset.id} = '503' THEN 'M5'  WHEN {custevent_nx_task_asset.parent.id} = '503' THEN 'M5' WHEN {custevent_nx_task_asset.id} IS NOT NULL THEN NVL2({custevent_nx_customer},{custevent_nx_customer}, {custevent_nx_task_type}) WHEN {custevent_nx_task_asset.parent.id} IS NOT NULL THEN NVL2({custevent_nx_customer},{custevent_nx_customer},{custevent_nx_task_type}) ELSE {custevent_nx_task_type} END||NVL2({custevent_nx_task_asset},' : '||regexp_replace({custevent_nx_task_asset}, '^.* : ', ''), '')",
+					"secondarylabel": "formulatext:nvl({case.custevent_nx_case_details},{message})",
+					"//": "formulatext:{case.custevent_nx_case_details}",
+					"details": "formulatext:\t\t\t\t\t\t\t\t\t\t'<p><a href=\"${url.task}?id='||{internalid}||'\" title=\"Task No: '||{custevent_nx_task_number}||'\" target=\"_blank\">'||nvl2({custevent_nx_task_type},' Task Type : ' ||  {custevent_nx_task_type} || ' ' , '')||'Task No. ' || {custevent_nx_task_number}||'</a></p>'||\t\t\t\t\t\t\t\t\t\t'<p>'||{priority}||' Priority</p>'||\t\t\t\t\t\t\t\t\t\tnvl2({custevent_nx_task_asset}, '<p><a href=\"${url.asset}&id='||{custevent_nx_task_asset.internalid}||'\" title=\"Asset '||{custevent_nx_task_asset.custrecord_nx_asset_serial}||'\" target=\"_blank\">'||nvl({custevent_nx_task_asset.custrecord_nx_asset_item}, {custevent_nx_task_asset})||'</a></p>', '')||\t\t\t\t\t\t\t\t\t\tnvl2({case.internalid}, '<p><a href=\"${url.case}?id='||{case.internalid}||'\" title=\"Case '||{case.casenumber}||'\" target=\"_blank\">'||nvl({case.custevent_nx_case_type}, 'Case')||' '||{case.casenumber}||'</a></p>', '')||\t\t\t\t\t\t\t\t\t\tnvl2({job.internalid}, '<p><a href=\"${url.project}?id='||{job.internalid}||'\" title=\"Project '||{job.entityid}||'\" target=\"_blank\">'||nvl({job.custentity_nx_project_type}, 'Project')||' '||{job.entityid}||'</a></p>', '')||\t\t\t\t\t\t\t\t\t\tnvl2({case.custevent_nx_case_details}, '<p class=\"ellipsis\"><b>Details:</b><br>'||substr({case.custevent_nx_case_details},1,200)||'</p>', '')||\t\t\t\t\t\t\t\t\t\tnvl2({message}, '<p class=\"ellipsis\"><b>Message:</b><br>'||substr({message},1,200)||'</p>', '')||\t\t\t\t\t\t\t\t\t\tnvl2({custevent_nx_task_skill}, '<p><b>Skills:</b><br>'||replace({custevent_nx_task_skill}, ',', ', '), '')||\t\t\t\t\t\t\t\t\t\tnvl2({custevent_nx_actions_taken}, '<p class=\"ellipsis\"><b>Actions Taken:</b><br>'||substr({custevent_nx_actions_taken},1,200)||'</p>', '')"
+				}
+			}
+		}
+	},
+	"views/task/servicereport": {
+		"hidden": true
+	},
+	"notification": {
+		"emails": {},
+		"caseemail": {
+			"servicereport": {
+				"attachments": {
+					"servicereport": {
+						"contents": {
+							"template": "/Templates/PDF Templates/Case Service Report.xml",
+							"salesorder": {
+								"filters": [
+									["mainline","is","F"],"and",
+									["custbody_nx_case","anyof","${ supportcase.id }"],"and",
+									["taxline","is","F"]
+								],
+								"map": {
+									"assetserial": "custcol_nx_asset.custrecord_nx_asset_serial",
+									"displayname": "item.displayname",
+									"assetitemdisplayname": "custcol_nx_asset.custrecord_nx_asset_item"
+								}
+							},
+							"servicerecord": {
+								"record": "customrecord_nxc_servicerecord",
+								"filters": [
+									["custrecord_sr_case","anyof","${ supportcase.id }"]
+								],
+								"objectify": false,
+								"form": {
+									"customform": 118
+								},
+								"//": ["custrecord_sr_servicetype","custrecord_sr_machine_type","custrecord_sr_250_drain_fuel","custrecord_sr_250_clean_fuel_tank","custrecord_sr_250_clean_fuel_suction","custrecord_sr_250_clean_air_cleaner","custrecord_sr_250_clean_air_inlet_screen","custrecord_sr_250_clean_cab_filter","custrecord_sr_250_check_airintake","custrecord_sr_250_check_cracks","custrecord_sr_250_check_attachment","custrecord_sr_250_check_pin_bushwear","custrecord_sr_250_check_hosing_wiring","custrecord_sr_250_check_belt_condition","custrecord_sr_250_check_extinguisher","custrecord_sr_250_check_dash_instruments","custrecord_sr_250_check_seat_belt","custrecord_sr_250_check_latches","custrecord_sr_250_check_lights","custrecord_sr_250_check_machine_ops","custrecord_sr_250_check_surge_tank","custrecord_sr_250_check_pumpoil_level","custrecord_sr_250_check_hydraulic_oil","custrecord_sr_250_check_oil_processing","custrecord_sr_250_change_oil_felling","custrecord_sr_250_change_engine_oil","custrecord_sr_250_replace_oil_filter","custrecord_sr_250_replace_fuel_filter","custrecord_sr_250_lubricate","custrecord_sr_500excv_change_pump_oil","custrecord_sr_500excv_change_travel_gear","custrecord_sr_500excv_replace_case_drain","custrecord_sr_500excv_check_track_roller","custrecord_sr_500excv_check_truck_sag","custrecord_sr_500excv_check_battery_term","custrecord_sr_1000excv_replace_air_elem","custrecord_sr_1000excv_replace_filters","custrecord_sr_1000excv_clean_engine","custrecord_sr_2000excv_change_oil","custrecord_sr_2000excv_clean_suction","custrecord_sr_2000excv_clean_fillstrain","custrecord_sr_2000excv_carry_out_tune","custrecord_sr_2000excv_replace_air_valve","custrecord_sr_2000excv_replace_filters","custrecord_sr_2000excv_replace_fan","custrecord_sr_4000excv_coolant","custrecord_sr_4000excv_replace_breather","custrecord_sr_comments"]
+							},
+							"winchservicerecord": {
+								"record": "customrecord_nxc_wasr",
+								"filters": [
+									["custrecord_wasr_case","anyof","${ supportcase.id }"]
+								],
+								"objectify": false,
+								"form": {
+									"customform": 129
+								},
+								"//": ["custrecord_wasr_machinemodel","custrecord_wasr_machinehours","custrecord_wasr_winchhours","custrecord_wasr_wanumber","custrecord_wasr_servicetype","custrecord_wasr_winchreturnfiltersx2","custrecord_wasr_gearboxoils","custrecord_wasr_electricalwiring","custrecord_wasr_dogboneassembly","custrecord_wasr_fairleadassembly","custrecord_wasr_encoderassembly","custrecord_wasr_boomrollerassembly","custrecord_wasr_ropeguardandguides","custrecord_wasr_hydraulicleak","custrecord_wasr_servicesticker","custrecord_wasr_electricalbox","custrecord_wasr_warninglabels","custrecord_wasr_winchvalveblock","custrecord_wasr_safetyswitches","custrecord_wasr_drumcamera","custrecord_wasr_wifi","custrecord_wasr_rearframe","custrecord_wasr_winchdrum","custrecord_wasr_casedrainfilter","custrecord_wasr_gear_box_oils","custrecord_wasr_casedrain","custrecord_wasr_coolerfans","custrecord_wasr_fellingmachinecontrols","custrecord_wasr_cellcalibrate","custrecord_wasr_fellingmachinetowhitch","custrecord_wasr_softwareupdate","custrecord_wasr_winchpressuresretune","custrecord_wasr_roperigging","custrecord_wasr_comment","custrecord_wasr_lhcase","custrecord_wasr_rhcase","custrecord_wasr_tensionpdf"]
+							},
+							"carriageservicerecord": {
+								"record": "customrecord_nxc_gsr",
+								"filters": [
+									["custrecord_gsr_case","anyof","${ supportcase.id }"]
+								],
+								"objectify": false,
+								"form": {
+									"customform": 130
+								},
+								"map": ["custrecord_gsr_date","custrecord_gsr_asset","custrecord_gsr_ffcno","custrecord_gsr_servicetype","custrecord_gsr_engineoildrainandrefill","custrecord_gsr_grapplegreaseandcheck","custrecord_gsr_oilleakscheck","custrecord_gsr_engineoilfilterreplace","custrecord_gsr_sheavesgreaseandcheck","custrecord_gsr_fluidlevelscheck","custrecord_gsr_fuelfilterinlineandspinpn","custrecord_gsr_airfilter","custrecord_gsr_hydraulicreturnfilter","custrecord_gsr_lights","custrecord_gsr_ropeconnections","custrecord_gsr_hydraulichosing","custrecord_gsr_enginecoolingfins","custrecord_gsr_valveblock","custrecord_gsr_electricalwiring","custrecord_gsr_electricalbox","custrecord_gsr_tv","custrecord_gsr_camera","custrecord_gsr_engineoilcatchcan","custrecord_gsr_hydraulicpressure","custrecord_gsr_pressurebuilduptime","custrecord_gsr_battery","custrecord_gsr_carriagefunctions","custrecord_gsr_alternatorbelt","custrecord_gsr_enginemount","custrecord_gsr_safetyswitches","custrecord_gsr_cameratransmitterandosd","custrecord_gsr_aerials","custrecord_gsr_firesupperssion","custrecord_gsr_grapplebrakes","custrecord_gsr_bolts","custrecord_gsr_carriageframeanddoors","custrecord_gsr_ropesguides","custrecord_gsr_lubesticker","custrecord_gsr_grappleopenclosetime","custrecord_gsr_grapplepinbolts","custrecord_gsr_hydraulicoil","custrecord_gsr_enginerpm","custrecord_gsr_hydraulicpressurefilters","custrecord_gsr_accumulatorgaspressure","custrecord_gsr_enginevalveclearance","custrecord_gsr_alternatorbeltreplace","custrecord_gsr_comments"]
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"asset": {
+		"inheritFields": ["custrecord_nx_asset_customer","custrecord_nx_asset_address","custrecord_nx_asset_address_text","custrecord_nx_asset_region","custrecord_nx_asset_latitude","custrecord_nx_asset_longitude"]
+	},
+	"script": {
+		"deploymentroles": {
+			"customdeploy_nx_console": "3",
+			"customdeploy_nx_mobile": "3",
+			"customdeploy_nx_scheduler": "3",
+			"customdeploy_nx_setup": "3",
+			"customdeploy_nx_suitelet": "3",
+			"customdeploy_nx_expensereport_userevent": "3",
+			"customdeploy_nx_invoice_userevent": "3",
+			"customdeploy_nx_transferorder_userevent": "3",
+			"customdeploy_nx_itemfulfill_userevent": "3",
+			"customdeploy_nx_project_userevent": "3",
+			"customdeploy_nx_salesorder_userevent": "3",
+			"customdeploy_nx_case_userevent": "3",
+			"customdeploy_nx_task_userevent": "3",
+			"customdeploy_nx_time_userevent": "3",
+			"customdeploy_nx_projecttask_userevent": "3",
+			"customdeploy_nx_opportunity_userevent": "3",
+			"customdeploy_nx_recurrence_userevent": "3",
+			"customdeploy_nx_subsidiary_userevent": "3",
+			"customdeploy_nx_serviceitem_userevent": "3",
+			"customdeploy_nx_machinehour_userevent": "3",
+			"customdeploy_nx_jsa_userevent": "3",
+			"customdeploy_nx_jsahazards_userevent": "3",
+			"customdeploy_nx_gsr_userevent": "3",
+			"customdeploy_nx_servicerecord_userevent": "3",
+			"customdeploy_nx_quote_userevent": "3",
+			"customdeploy_nx_employee_userevent": "3",
+			"customdeploy_nx_consumable_userevent": "3",
+			"customdeploy_nx_configuration_userevent": "3",
+			"customdeploy_nx_customer_userevent": "3",
+			"customdeploy_nx_asset_userevent": "3"
+		}
+	}
+}

@@ -1,0 +1,196 @@
+{
+	"name": "routes/scheduler",
+	"description": "<p>Scheduler web app server</p>",
+	"members": [
+		{
+			"name": "administrators",
+			"description": "<p>Roles of editors</p>",
+			"type": [
+				"Array.<Number>"
+			]
+		},
+		{
+			"name": "assignedpanel",
+			"description": "<p>Assigned events filtering and sorting options.</p>",
+			"type": [
+				"Array.<Object>"
+			]
+		},
+		{
+			"name": "calendar",
+			"description": "<p>Resolvable collection of Resource Calendars. Run time json is viewable <a href=\"${ schedulerurl }/calendar&config=true\" target=\"_blank\">here</a>.</p>",
+			"type": [
+				"Array.<Object>"
+			],
+			"properties": [
+				{
+					"name": "nxworkcalendar",
+					"description": "<p>Field Service Work Calendar</p>",
+					"type": [
+						"object"
+					]
+				},
+				{
+					"name": "workcalendar",
+					"description": "<p>Advanced Projects Work Calendar</p>",
+					"type": [
+						"object"
+					]
+				}
+			]
+		},
+		{
+			"name": "colour",
+			"description": "<p>The colour options and palette defaults</p>",
+			"type": [
+				"Object"
+			]
+		},
+		{
+			"name": "end",
+			"description": "<p>The end of service time in hours = 5:00 pm</p>",
+			"type": [
+				"Number"
+			]
+		},
+		{
+			"name": "event",
+			"description": "<p>Resolvable collection of Events. Run time json is viewable <a href=\"${ schedulerurl }/event&config=true\" target=\"_blank\">here</a>.</p>",
+			"type": [
+				"Array.<Object>"
+			],
+			"properties": [
+				{
+					"name": "nonworkingday",
+					"description": "<p>Field Service Emplyee Non Working Days</p>",
+					"type": [
+						"object"
+					]
+				},
+				{
+					"name": "task",
+					"description": "<p>CRM Tasks</p>",
+					"type": [
+						"object"
+					]
+				},
+				{
+					"name": "projecttask",
+					"description": "<p>Project Tasks</p>",
+					"type": [
+						"object"
+					]
+				},
+				{
+					"name": "resourceallocation",
+					"description": "<p>Resource Allocations</p>",
+					"type": [
+						"object"
+					]
+				}
+			]
+		},
+		{
+			"name": "eventstatus",
+			"description": "<p>Event status text and icons</p>",
+			"type": [
+				"Object"
+			]
+		},
+		{
+			"name": "feedback",
+			"description": "<p>Feedback types and default option</p>",
+			"type": [
+				"Object"
+			]
+		},
+		{
+			"name": "groups",
+			"description": "<p>Resource attribute names to group by.</p>",
+			"type": [
+				"Array.<String>"
+			]
+		},
+		{
+			"name": "inject",
+			"description": "<p>Html to append to the head of the document to load custom content such as styles and scripts.</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "netpromoterscore",
+			"description": "<p>Net Promoter Score delay settings and scores</p>",
+			"type": [
+				"Object"
+			]
+		},
+		{
+			"name": "onsite",
+			"description": "<p>Distance in kilometers that a Resource is considered on site for an Event.</p>",
+			"type": [
+				"Number"
+			]
+		},
+		{
+			"name": "refresh",
+			"description": "<p>Frequency of refreshes of Resource and Events in milliseconds. 60000 = 1 minute</p>",
+			"type": [
+				"Number"
+			]
+		},
+		{
+			"name": "resource",
+			"description": "<p>Resolvable collection of Resources. Run time json is viewable <a href=\"${ schedulerurl }/resource&config=true\" target=\"_blank\">here</a>.</p>",
+			"type": [
+				"Array.<Object>"
+			],
+			"properties": [
+				{
+					"name": "employee",
+					"description": "<p>Employees</p>",
+					"type": [
+						"object"
+					]
+				}
+			]
+		},
+		{
+			"name": "resourcepanel",
+			"description": "<p>Resource panel filtering and sorting options.</p>",
+			"type": [
+				"Array.<Object>"
+			]
+		},
+		{
+			"name": "start",
+			"description": "<p>The start of service time in hours = 9:00 am</p>",
+			"type": [
+				"Number"
+			]
+		},
+		{
+			"name": "unassignedpanel",
+			"description": "<p>Unassigned events filtering and sorting options.</p>",
+			"type": [
+				"Array.<Object>"
+			]
+		},
+		{
+			"name": "unit",
+			"description": "<p>The minimum duration and rounding unit for editable Events start and end times in milliseconds. 900000 = 15 minutes</p>",
+			"type": [
+				"Number"
+			]
+		},
+		{
+			"name": "views",
+			"description": "<p>The tabs available for browsing</p>",
+			"type": [
+				"Object"
+			]
+		}
+	],
+	"methods": [],
+	"id": "routes-scheduler"
+}

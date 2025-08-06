@@ -1,0 +1,47 @@
+{
+	"name": "core/clone",
+	"description": "<p>Utility to deep clone a value. Iterates into objects and arrays cloning each key value\npair using the return values of the clonekey and clonevalue callbacks.</p>",
+	"parameters": [
+		{
+			"name": "original",
+			"description": "<p>Value to clone</p>",
+			"type": [
+				"*"
+			]
+		},
+		{
+			"name": "clonevalue",
+			"description": "<p>Callback accepting an original value and the\ncurrent key path. Returns the cloned value.</p>",
+			"type": [
+				"function"
+			],
+			"optional": true
+		},
+		{
+			"name": "clonekey",
+			"description": "<p>Callback accepting an original key and current\nkey path. Returns the cloned key.</p>",
+			"type": [
+				"function"
+			],
+			"optional": true
+		},
+		{
+			"name": "path",
+			"description": "<p>Recursion key path defined during processing</p>",
+			"type": [
+				"Array.<String>"
+			],
+			"optional": true
+		}
+	],
+	"returns": [
+		{
+			"description": "<p>Clone of the original value</p>",
+			"type": [
+				"*"
+			]
+		}
+	],
+	"methods": [],
+	"id": "core-clone"
+}

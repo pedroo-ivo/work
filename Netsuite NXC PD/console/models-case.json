@@ -1,0 +1,37 @@
+{
+	"name": "models/case",
+	"members": [
+		{
+			"name": "autoclose",
+			"description": "<p>Automatically close Project when no open cases</p>",
+			"type": [
+				"Boolean"
+			]
+		}
+	],
+	"methods": [
+		{
+			"name": "invoice",
+			"description": "<p>Generate invoice from existing salesorder</p>",
+			"parameters": [
+				{
+					"name": "options.verify",
+					"description": "<p>Optionally check if invoice can be created</p>",
+					"type": [
+						"Boolean"
+					]
+				}
+			],
+			"returns": [
+				{
+					"description": "<p>Invoice id or Boolean if verify</p>",
+					"type": [
+						"Number",
+						"Boolean"
+					]
+				}
+			]
+		}
+	],
+	"id": "models-case"
+}

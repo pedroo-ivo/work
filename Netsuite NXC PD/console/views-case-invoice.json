@@ -1,0 +1,43 @@
+{
+	"name": "views/case/invoice",
+	"description": "<p>Case Invoice Component\nAdds a button to view mode of Cases with unbilled time, expenses, or sales to create an Invoice.</p>",
+	"members": [
+		{
+			"name": "confirm",
+			"description": "<p>Confirm text before creating the invoice.</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "hidden",
+			"description": "<p>This view is to be shown or hidden</p>",
+			"type": [
+				"Boolean"
+			]
+		},
+		{
+			"name": "label",
+			"description": "<p>Button label</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "name",
+			"description": "<p>Button name</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "success",
+			"description": "<p>Alert text when the invoice is successfully created.</p>",
+			"type": [
+				"String"
+			]
+		}
+	],
+	"methods": [],
+	"id": "views-case-invoice"
+}

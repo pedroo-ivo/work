@@ -1,0 +1,319 @@
+{
+	"endpoint": [
+		{
+			"id": "models-activity",
+			"name": "models/activity",
+			"title": "models/activity",
+			"type": "class",
+			"index": 0
+		},
+		{
+			"id": "models-asset",
+			"name": "models/asset",
+			"title": "models/asset",
+			"type": "class",
+			"index": 1
+		},
+		{
+			"id": "models-case",
+			"name": "models/case",
+			"title": "models/case",
+			"type": "class",
+			"index": 2
+		},
+		{
+			"id": "models-customer",
+			"name": "models/customer",
+			"title": "models/customer",
+			"type": "class",
+			"index": 3
+		},
+		{
+			"id": "models-projecttask",
+			"name": "models/projecttask",
+			"title": "models/projecttask",
+			"type": "class",
+			"index": 4
+		},
+		{
+			"id": "models-task",
+			"name": "models/task",
+			"title": "models/task",
+			"type": "class",
+			"index": 5
+		},
+		{
+			"id": "routes-mobile",
+			"name": "routes/mobile",
+			"title": "routes/mobile",
+			"type": "class",
+			"index": 6
+		},
+		{
+			"id": "routes-scheduler",
+			"name": "routes/scheduler",
+			"title": "routes/scheduler",
+			"type": "class",
+			"index": 7
+		},
+		{
+			"id": "utilities-collection",
+			"name": "utilities/collection",
+			"title": "utilities/collection",
+			"type": "module",
+			"index": 8
+		},
+		{
+			"id": "utilities-config",
+			"name": "utilities/config",
+			"title": "utilities/config",
+			"type": "module",
+			"index": 9
+		},
+		{
+			"id": "utilities-form",
+			"name": "utilities/form",
+			"title": "utilities/form",
+			"type": "module",
+			"index": 10
+		},
+		{
+			"id": "utilities-merge",
+			"name": "utilities/merge",
+			"title": "utilities/merge",
+			"type": "module",
+			"index": 11
+		},
+		{
+			"id": "utilities-resolve",
+			"name": "utilities/resolve",
+			"title": "utilities/resolve",
+			"type": "module",
+			"index": 12
+		},
+		{
+			"id": "utilities-resource",
+			"name": "utilities/resource",
+			"title": "utilities/resource",
+			"type": "module",
+			"index": 13
+		},
+		{
+			"id": "utilities-rule",
+			"name": "utilities/rule",
+			"title": "utilities/rule",
+			"type": "module",
+			"index": 14
+		},
+		{
+			"id": "views-asset-address",
+			"name": "views/asset/address",
+			"title": "views/asset/address",
+			"type": "module",
+			"index": 15
+		},
+		{
+			"id": "views-asset-addresssearch",
+			"name": "views/asset/addresssearch",
+			"title": "views/asset/addresssearch",
+			"type": "module",
+			"index": 16
+		},
+		{
+			"id": "views-asset-parent",
+			"name": "views/asset/parent",
+			"title": "views/asset/parent",
+			"type": "module",
+			"index": 17
+		},
+		{
+			"id": "views-asset-profitability",
+			"name": "views/asset/profitability",
+			"title": "views/asset/profitability",
+			"type": "module",
+			"index": 18
+		},
+		{
+			"id": "views-asset-project",
+			"name": "views/asset/project",
+			"title": "views/asset/project",
+			"type": "module",
+			"index": 19
+		},
+		{
+			"id": "views-asset-task",
+			"name": "views/asset/task",
+			"title": "views/asset/task",
+			"type": "module",
+			"index": 20
+		},
+		{
+			"id": "views-assetcustomer",
+			"name": "views/assetcustomer",
+			"title": "views/assetcustomer",
+			"type": "module",
+			"index": 21
+		},
+		{
+			"id": "views-case-autoname",
+			"name": "views/case/autoname",
+			"title": "views/case/autoname",
+			"type": "module",
+			"index": 22
+		},
+		{
+			"id": "views-case-invoice",
+			"name": "views/case/invoice",
+			"title": "views/case/invoice",
+			"type": "module",
+			"index": 23
+		},
+		{
+			"id": "views-case-projects",
+			"name": "views/case/projects",
+			"title": "views/case/projects",
+			"type": "module",
+			"index": 24
+		},
+		{
+			"id": "views-case-servicereport",
+			"name": "views/case/servicereport",
+			"title": "views/case/servicereport",
+			"type": "module",
+			"index": 25
+		},
+		{
+			"id": "views-case-tasks",
+			"name": "views/case/tasks",
+			"title": "views/case/tasks",
+			"type": "module",
+			"index": 26
+		},
+		{
+			"id": "views-customer-profitability",
+			"name": "views/customer/profitability",
+			"title": "views/customer/profitability",
+			"type": "module",
+			"index": 27
+		},
+		{
+			"id": "views-employee-loginas",
+			"name": "views/employee/loginas",
+			"title": "views/employee/loginas",
+			"type": "module",
+			"index": 28
+		},
+		{
+			"id": "views-employee-mobilelogin",
+			"name": "views/employee/mobilelogin",
+			"title": "views/employee/mobilelogin",
+			"type": "module",
+			"index": 29
+		},
+		{
+			"id": "views-itemfulfillment-assets",
+			"name": "views/itemfulfillment/assets",
+			"title": "views/itemfulfillment/assets",
+			"type": "module",
+			"index": 30
+		},
+		{
+			"id": "views-newnull",
+			"name": "views/newnull",
+			"title": "views/newnull",
+			"type": "module",
+			"index": 31
+		},
+		{
+			"id": "views-project-autoname",
+			"name": "views/project/autoname",
+			"title": "views/project/autoname",
+			"type": "module",
+			"index": 32
+		},
+		{
+			"id": "views-project-contact",
+			"name": "views/project/contact",
+			"title": "views/project/contact",
+			"type": "module",
+			"index": 33
+		},
+		{
+			"id": "views-project-customer",
+			"name": "views/project/customer",
+			"title": "views/project/customer",
+			"type": "module",
+			"index": 34
+		},
+		{
+			"id": "views-project-journal",
+			"name": "views/project/journal",
+			"title": "views/project/journal",
+			"type": "module",
+			"index": 35
+		},
+		{
+			"id": "views-project-profitability",
+			"name": "views/project/profitability",
+			"title": "views/project/profitability",
+			"type": "module",
+			"index": 36
+		},
+		{
+			"id": "views-project-program",
+			"name": "views/project/program",
+			"title": "views/project/program",
+			"type": "module",
+			"index": 37
+		},
+		{
+			"id": "views-project-subprojects",
+			"name": "views/project/subprojects",
+			"title": "views/project/subprojects",
+			"type": "module",
+			"index": 38
+		},
+		{
+			"id": "views-projecttask-servicereport",
+			"name": "views/projecttask/servicereport",
+			"title": "views/projecttask/servicereport",
+			"type": "module",
+			"index": 39
+		},
+		{
+			"id": "views-schedule",
+			"name": "views/schedule",
+			"title": "views/schedule",
+			"type": "module",
+			"index": 40
+		},
+		{
+			"id": "views-signature",
+			"name": "views/signature",
+			"title": "views/signature",
+			"type": "module",
+			"index": 41
+		},
+		{
+			"id": "views-task-autoname",
+			"name": "views/task/autoname",
+			"title": "views/task/autoname",
+			"type": "module",
+			"index": 42
+		},
+		{
+			"id": "views-task-servicereport",
+			"name": "views/task/servicereport",
+			"title": "views/task/servicereport",
+			"type": "module",
+			"index": 43
+		},
+		{
+			"id": "views-task-unassigned",
+			"name": "views/task/unassigned",
+			"title": "views/task/unassigned",
+			"type": "module",
+			"index": 44
+		}
+	]
+}

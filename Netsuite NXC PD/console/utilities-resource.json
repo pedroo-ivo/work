@@ -1,0 +1,202 @@
+{
+	"name": "utilities/resource",
+	"description": "<p>Utility to render a resource</p>",
+	"parameters": [
+		{
+			"name": "original",
+			"description": "<p>Resource template.</p>",
+			"type": [
+				"object"
+			]
+		},
+		{
+			"name": "options.id",
+			"description": "<p>Unique ID to assign to resource.</p>",
+			"type": [
+				"string"
+			]
+		},
+		{
+			"name": "options.parentid",
+			"description": "<p>Parent record id</p>",
+			"type": [
+				"number"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.where",
+			"description": "<p>Filters to apply to article fetch</p>",
+			"type": [
+				"object"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.upload",
+			"description": "<p>Upload path</p>",
+			"type": [
+				"string"
+			]
+		},
+		{
+			"name": "options.download",
+			"description": "<p>Download path</p>",
+			"type": [
+				"string"
+			]
+		},
+		{
+			"name": "options.imagesize",
+			"description": "<p>Maximum image size</p>",
+			"type": [
+				"number"
+			]
+		},
+		{
+			"name": "options.icon",
+			"type": [
+				"Boolean"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.label",
+			"type": [
+				"String"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.parent",
+			"description": "<p>ID of the parent resource to add this resource as a sub menu option of.</p>",
+			"type": [
+				"string"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.article",
+			"description": "<p>Return the Article model constructor</p>",
+			"type": [
+				"boolean"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.article.extend",
+			"type": [
+				"Boolean"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.article.parent",
+			"type": [
+				"Boolean"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.articleonly",
+			"description": "<p>Return the Article model constructor</p>",
+			"type": [
+				"boolean"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.element",
+			"description": "<p>Element definitions</p>",
+			"type": [
+				"string"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.elementonly",
+			"description": "<p>Return the Element definition</p>",
+			"type": [
+				"string"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.form",
+			"description": "<p>Loads a form for the Article model and extends the resource element property and article map with fields loaded from the form. Refer to Record.form for valid parameters.</p>",
+			"type": [
+				"true",
+				"Number",
+				"Object"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.hidden",
+			"description": "<p>The resource is hidden.</p>",
+			"type": [
+				"Boolean"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.search",
+			"type": [
+				"Boolean"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.remote",
+			"type": [
+				"Boolean"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.readonly",
+			"type": [
+				"Boolean"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.min",
+			"type": [
+				"Boolean"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.max",
+			"type": [
+				"Boolean"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.enable",
+			"type": [
+				"Boolean"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.disable",
+			"type": [
+				"Boolean"
+			],
+			"optional": true
+		},
+		{
+			"name": "options.*",
+			"description": "<p>All other option values are added to the templating scope under <em>options</em></p>",
+			"type": [
+				"object"
+			],
+			"optional": true
+		}
+	],
+	"methods": [],
+	"id": "utilities-resource"
+}

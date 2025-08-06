@@ -1,0 +1,29 @@
+{
+	"name": "views/asset/addresssearch",
+	"description": "<p>Asset Address Search Component\nAdd a google address search input to the form</p>",
+	"members": [
+		{
+			"name": "hidden",
+			"description": "<p>This view is to be shown or hidden.</p>",
+			"type": [
+				"Boolean"
+			]
+		},
+		{
+			"name": "label",
+			"description": "<p>Field label</p>",
+			"type": [
+				"String"
+			]
+		},
+		{
+			"name": "name",
+			"description": "<p>Unique name of the custom page Select field.</p>",
+			"type": [
+				"String"
+			]
+		}
+	],
+	"methods": [],
+	"id": "views-asset-addresssearch"
+}
