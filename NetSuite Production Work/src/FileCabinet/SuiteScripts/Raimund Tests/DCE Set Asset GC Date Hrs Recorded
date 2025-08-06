@@ -1,0 +1,11 @@
+/**
+ * when a Date Machine Hours for GC is created/edit, update its GC asset record
+ */
+function afterSubmit(type) {
+  if (type == 'create' || type == 'edit') {
+    var assetId = nlapiGetFieldValue('custrecord_sh_asset');
+    var DateHourRecorded = nlapiGetFieldValue('created');
+    // Only link to SO - if transaction exist of any type.
+    if (assetId && DateHourRecorded) nlapiSubmitField('customrecord_nx_asset', assetId, '	custrecord_na_date_last_recorded', DateHourRecorded);
+  }
+}

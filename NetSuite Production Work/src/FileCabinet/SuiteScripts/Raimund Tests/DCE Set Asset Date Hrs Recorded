@@ -1,0 +1,11 @@
+/**
+ * when a Date Winch Service report is created/edit, update its asset record
+ */
+function afterSubmit(type) {
+  if (type == 'create' || type == 'edit') {
+    var assetId = nlapiGetFieldValue('custrecord_wasr_asset');
+    var DateHourRecorded = nlapiGetFieldValue('custrecord_wasr_date');
+    // Only link to SO - if transaction exist of any type.
+    if (assetId && DateHourRecorded) nlapiSubmitField('customrecord_nx_asset', assetId, 'custrecord_na_date_last_recorded', DateHourRecorded);
+  }
+}

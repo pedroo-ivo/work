@@ -1,0 +1,29 @@
+/**
+ * When a RH & LH Case Drain record is created or edited, update its asset record
+ */
+function afterSubmit(type) {
+  if (type === 'create' || type === 'edit') {
+    var assetId = nlapiGetFieldValue('custrecord_wasr_asset');
+    var LHCaseDrain = nlapiGetFieldValue('custrecord_wasr_lhcase');
+    var RHCaseDarin = nlapiGetFieldValue('custrecord_wasr_rhcase');
+
+    if (assetId) {
+      var fieldsToUpdate = [];
+      var valuesToUpdate = [];
+
+      if (LHCaseDrain) {
+        fieldsToUpdate.push('custrecord_dce_latest_case_drain_lh');
+        valuesToUpdate.push(LHCaseDrain);
+      }
+
+      if (RHCaseDarin) {
+        fieldsToUpdate.push('custrecord_dce_latest_case_drain_rh');
+        valuesToUpdate.push(RHCaseDarin);
+      }
+
+      if (fieldsToUpdate.length > 0) {
+        nlapiSubmitField('customrecord_nx_asset', assetId, fieldsToUpdate, valuesToUpdate);
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+/**
+ * when a LH Case Drain amount is created/edit, update its asset record
+ */
+function afterSubmit(type) {
+  if (type == 'create' || type == 'edit') {
+    var assetId = nlapiGetFieldValue('custrecord_wasr_asset');
+    var LHCaseDrain = nlapiGetFieldValue('custrecord_wasr_lhcase');
+    // Only link to SO - if transaction exist of any type.
+    if (assetId && LHCaseDrain) nlapiSubmitField('customrecord_nx_asset', assetId, 'custrecord_dce_latest_case_drain_lh', LHCaseDrain);
+  }
+}

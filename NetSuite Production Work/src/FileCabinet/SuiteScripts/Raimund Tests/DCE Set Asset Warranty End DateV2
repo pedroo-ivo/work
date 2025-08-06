@@ -1,0 +1,15 @@
+/**
+ * User Event Script to set Warranty End Date 12 months after Purchase Date
+ */
+function beforeSubmit_setWarrantyDate(type) {
+  var purchaseDate = nlapiGetFieldValue('custrecord_na_purchase_date');
+
+  if (purchaseDate) {
+    var dateObj = nlapiStringToDate(purchaseDate);
+    dateObj.setMonth(dateObj.getMonth() + 12);
+    nlapiSetFieldValue('custrecord_warranty_end_date', nlapiDateToString(dateObj));
+  } else {
+    
+    nlapiSetFieldValue('custrecord_warranty_end_date', '');
+  }
+}

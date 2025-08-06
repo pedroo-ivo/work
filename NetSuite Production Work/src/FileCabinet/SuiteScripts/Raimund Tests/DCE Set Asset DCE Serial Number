@@ -1,0 +1,105 @@
+function fieldChanged(type, name) {
+  if (name === 'custrecord_dce_build_project') {
+    var projectId = nlapiGetFieldValue('custrecord_dce_build_project');
+    var projectText = nlapiGetFieldText('custrecord_dce_build_project'); // texto visible
+
+    // Limpiar campos si no hay proyecto seleccionado
+    if (!projectId) {
+      nlapiSetFieldValue('custrecord_dce_serial_number', '');
+      nlapiSetFieldValue('custrecord_dce_gearbox_ratio', '');
+      nlapiSetFieldValue('custrecord_dce_wifi_radios', '');
+      nlapiSetFieldValue('custrecord_dce_make', '');
+      return;
+    }
+
+    // --- DCE MAKE ---
+    if (projectText) {
+      var textUpper = projectText.toUpperCase();
+      if (textUpper.includes('STOCK WA') || textUpper.includes('STOCK GC') || textUpper.includes('STOCK HY') || textUpper.includes('STOCK TC')) {
+        nlapiSetFieldValue('custrecord_dce_make', '1'); // FALCON
+      } else if (textUpper.includes('STOCK DC-')) {
+        nlapiSetFieldValue('custrecord_dce_make', '2'); // MADILL
+      } else {
+        nlapiSetFieldValue('custrecord_dce_make', '');
+      }
+    }
+
+    // --- SERIAL NUMBER ---
+    var serialSearchResults = nlapiSearchRecord(null, 'customsearch3335', [
+      new nlobjSearchFilter('custbody_dce_work_order_project', null, 'is', projectId)
+    ], [
+      new nlobjSearchColumn('serialnumbers')
+    ]);
+
+    if (serialSearchResults && serialSearchResults.length > 0) {
+      var serial = serialSearchResults[0].getValue('serialnumbers');
+      nlapiSetFieldValue('custrecord_dce_serial_number', serial);
+    } else {
+      nlapiSetFieldValue('custrecord_dce_serial_number', '');
+    }
+
+    // --- GEARBOX DISPLAY NAME ---
+    var gearboxCodeResults = nlapiSearchRecord(null, 'customsearch3337', [
+      new nlobjSearchFilter('custbody_dce_work_order_project', null, 'is', projectId)
+    ], [
+      new nlobjSearchColumn('custcol_f5_sale_itemcode')
+    ]);
+
+    if (gearboxCodeResults && gearboxCodeResults.length > 0) {
+      var itemCode = gearboxCodeResults[0].getValue('custcol_f5_sale_itemcode');
+
+      var itemSearch = nlapiSearchRecord('inventoryitem', null, [
+        new nlobjSearchFilter('itemid', null, 'is', itemCode)
+      ], [
+        new nlobjSearchColumn('displayname')
+      ]);
+
+      if (itemSearch && itemSearch.length > 0) {
+        var displayName = itemSearch[0].getValue('displayname');
+        var cleanedName = displayName.replace(/PLANETARY DRIVE\s*/i, '').trim();
+        nlapiSetFieldValue('custrecord_dce_gearbox_ratio', cleanedName);
+      } else {
+        nlapiSetFieldValue('custrecord_dce_gearbox_ratio', '');
+      }
+    } else {
+      nlapiSetFieldValue('custrecord_dce_gearbox_ratio', '');
+    }
+
+    // --- WIFI RADIOS ---
+    var wifiCodeResults = nlapiSearchRecord(null, 'customsearch3338', [
+      new nlobjSearchFilter('custbody_dce_work_order_project', null, 'is', projectId)
+    ], [
+      new nlobjSearchColumn('custcol_f5_sale_itemcode')
+    ]);
+
+    if (wifiCodeResults && wifiCodeResults.length > 0) {
+      var wifiItemCode = wifiCodeResults[0].getValue('custcol_f5_sale_itemcode');
+      var wifiRadioName = '';
+
+      switch (wifiItemCode.toUpperCase()) {
+        case 'DC-C2584-00':
+          wifiRadioName = 'Doodle Labs';
+          break;
+        case 'DC-C1808-00':
+          wifiRadioName = 'Cambium Radios';
+          break;
+        default:
+          var wifiItemSearch = nlapiSearchRecord('inventoryitem', null, [
+            new nlobjSearchFilter('itemid', null, 'is', wifiItemCode)
+          ], [
+            new nlobjSearchColumn('displayname')
+          ]);
+
+          if (wifiItemSearch && wifiItemSearch.length > 0) {
+            wifiRadioName = wifiItemSearch[0].getValue('displayname');
+          } else {
+            wifiRadioName = '';
+          }
+      }
+
+      nlapiSetFieldValue('custrecord_dce_wifi_radios', wifiRadioName);
+    } else {
+      nlapiSetFieldValue('custrecord_dce_wifi_radios', '');
+    }
+  }
+}

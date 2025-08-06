@@ -1,0 +1,31 @@
+/** script to calculate the warranty end date automatically after 6 months of the purchase date
+ * @NApiVersion 2.x
+ * @NScriptType UserEventScript
+ */
+define(['N/log'], function (log) {
+
+  function beforeSubmit(context) {
+    var newRecord = context.newRecord;
+
+    // Obtener la fecha de compra
+    var purchaseDate = newRecord.getValue({ fieldId: 'custrecord_na_purchase_date' });
+
+    if (purchaseDate) {
+      var warrantyDate = new Date(purchaseDate);
+      warrantyDate.setMonth(warrantyDate.getMonth() + 6); // Sumar 6 meses
+
+      // Establecer la fecha de término de garantía
+      newRecord.setValue({
+        fieldId: 'custrecord_warranty_end_date',
+        value: warrantyDate,
+        ignoreFieldChange: true
+      });
+
+      log.debug('Warranty Date Set', warrantyDate.toDateString());
+    }
+  }
+
+  return {
+    beforeSubmit: beforeSubmit
+  };
+});

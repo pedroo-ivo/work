@@ -1,0 +1,24 @@
+function fieldChanged(type, name) {
+  if (name === 'custrecord_dce_build_project') {
+    var projectText = nlapiGetFieldText('custrecord_dce_build_project');
+    if (!projectText) return;
+
+    var filters = [
+      new nlobjSearchFilter('custbody_dce_work_order_project', null, 'is', projectText)
+    ];
+
+    var columns = [
+      new nlobjSearchColumn('item') // corresponde a "Item : Display Name"
+    ];
+
+    var results = nlapiSearchRecord(null, 'customsearch3337', filters, columns);
+
+    if (results && results.length > 0) {
+      var displayName = results[0].getValue('item');
+      nlapiSetFieldValue('custrecord_dce_gearbox_ratio', displayName);
+    } else {
+      alert('No se encontró ningún DISPLAY NAME para el proyecto seleccionado.');
+      nlapiSetFieldValue('custrecord_dce_gearbox_ratio', '');
+    }
+  }
+}
